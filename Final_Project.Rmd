@@ -61,7 +61,6 @@ egrid2021 <- read.csv(here("egrid_Data/eGRID2021_data.csv"), stringsAsFactors = 
 egrid2022 <- read.csv(here("egrid_Data/egrid2022_data.csv"), stringsAsFactors = TRUE)
 egrid2023 <- read.csv(here("egrid_Data/egrid2023_data_rev2.csv"), stringsAsFactors = TRUE)
 
-
 ```
 
 
