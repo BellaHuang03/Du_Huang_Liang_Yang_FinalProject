@@ -1,0 +1,107 @@
+---
+title: "Spatial & Temporal Growth of Renewable Energy Capacity in the U.S."
+author: "Bella Huang, Cecilia Liang, Isabella Yang, Michelle Du"
+date: "2025-12-05"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+\newpage
+\tableofcontents 
+\newpage
+\listoftables 
+\newpage
+\listoffigures 
+\newpage
+
+```{r setup, include=FALSE}
+# Set your working directory
+library(here)
+here()
+
+# Load your packages
+library(tidyverse)
+library(lubridate)
+library(dplyr)
+
+# Packages for Time Series Analysis
+library(trend)
+library(zoo)
+
+# Packages for Spatial Analysis
+library(RColorBrewer)
+library(sf)
+library(leaflet)
+library(mapview); mapviewOptions(fgb = FALSE)
+
+# Set your ggplot theme
+my_theme <- theme_minimal() +
+  theme(
+    # text
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 14),
+    axis.title.y = element_text(size = 12, margin = margin(r = 8)),
+    axis.text = element_text(size = 10),
+    # lines & grids
+    axis.ticks = element_line(linewidth = 0.3),
+    panel.grid.major = element_line(linewidth = 0.2, linetype = "dashed", color = "grey75"),
+    panel.grid.minor = element_blank(),
+    # backgrounds
+    plot.background = element_rect(fill = "white", color = NA),
+    panel.background = element_rect(fill = "white", color = "grey85"),
+    legend.key = element_rect(fill = "white", color = NA),
+)
+
+theme_set(my_theme)
+
+# Load your datasets
+egrid2018 <- read.csv(here("egrid_Data/egrid2018_data_v2.csv"), stringsAsFactors = TRUE)
+egrid2019 <- read.csv(here("egrid_Data/egrid2019_data.csv"), stringsAsFactors = TRUE)
+egrid2020 <- read.csv(here("egrid_Data/eGRID2020_Data_v2.csv"), stringsAsFactors = TRUE)
+egrid2021 <- read.csv(here("egrid_Data/eGRID2021_data.csv"), stringsAsFactors = TRUE)
+egrid2022 <- read.csv(here("egrid_Data/egrid2022_data.csv"), stringsAsFactors = TRUE)
+egrid2023 <- read.csv(here("egrid_Data/egrid2023_data_rev2.csv"), stringsAsFactors = TRUE)
+
+
+```
+
+
+# Rationale and Research Questions
+Which states have seen the fastest growth in renewable energy capacity?
+Does early adoption predict faster renewable expansion?
+Is renewable growth spatially clustered (e.g., wind in Midwest, solar in Southwest)?
+
+
+\newpage
+
+# Dataset Information
+
+
+
+\newpage
+
+# Exploratory Analysis 
+
+
+
+\newpage
+
+# Analysis
+
+
+
+## Question 1: <insert specific question here and add additional subsections for additional questions below, if needed>
+
+## Question 2: 
+
+
+
+
+\newpage
+
+# Summary and Conclusions
+
+
+\newpage
+
+# References
+<add references here if relevant, otherwise delete this section> 
