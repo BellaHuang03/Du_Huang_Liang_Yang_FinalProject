@@ -61,6 +61,14 @@ egrid2021 <- read.csv(here("egrid_Data/eGRID2021_data.csv"), stringsAsFactors = 
 egrid2022 <- read.csv(here("egrid_Data/egrid2022_data.csv"), stringsAsFactors = TRUE)
 egrid2023 <- read.csv(here("egrid_Data/egrid2023_data_rev2.csv"), stringsAsFactors = TRUE)
 
+# Datasets for time series analysis
+ts2018 <- read.csv(here("egrid_Data/time_series/ts2018.csv"), stringsAsFactors = TRUE)
+ts2019 <- read.csv(here("egrid_Data/time_series/ts2019.csv"), stringsAsFactors = TRUE)
+ts2020 <- read.csv(here("egrid_Data/time_series/ts2020.csv"), stringsAsFactors = TRUE)
+ts2021 <- read.csv(here("egrid_Data/time_series/ts2021.csv"), stringsAsFactors = TRUE)
+ts2022 <- read.csv(here("egrid_Data/time_series/ts2022.csv"), stringsAsFactors = TRUE)
+ts2023 <- read.csv(here("egrid_Data/time_series/ts2023.csv"), stringsAsFactors = TRUE)
+
 ```
 
 
@@ -73,7 +81,7 @@ Is renewable growth spatially clustered (e.g., wind in Midwest, solar in Southwe
 \newpage
 
 # Dataset Information
-
+From this project, we plan to use the PLNT(Plant) tab from U.S. Environmental Protection Agency's eGRID datasets from 2018 to 2023. The PLNT tab in eGRID provides plant-level information of electricity generation and capacity across the United States, including spatial information, fuel-specific energy contributions, and capacity information. Because each plant record also includes spatial identifiers such as county code and latitute/longitude, this dataset is perfect for linking generation and capacity measures to spatial patterns across regions.
 
 
 \newpage
