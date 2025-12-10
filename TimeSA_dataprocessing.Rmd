@@ -47,28 +47,11 @@ glimpse(time_series)
 
 6. Use a `left_join` to combine the data frames. Specify the correct order of data frames within this function so that the final dimensions are 3652 rows and 3 columns. Call your combined data frame time_series 
 ```{r, message = FALSE}
-time_series$Year <- as.Date(time_series$Datayear, format = "%m/%d/%Y")
+names(time_series)
+grep("Year", names(time_series), value = TRUE)
+year_chars <- as.character(time_series$YearCol)
+grep("Year", names(time_series), value = TRUE)
 
-time_series <- time_series[, c("Date", 
-                                   "Daily.Max.8.hour.Ozone.Concentration", 
-                                   "DAILY_AQI_VALUE")]
-head(time_series)
+names(time_series)
 
-# 5
-Days <- as.data.frame(seq(from = as.Date("2010-01-01"),
-                          to   = as.Date("2019-12-31"),
-                          by   = "day"))
-names(Days)[1] <- "Date"
-head(Days)
-
-# 6
-time_series$Date <- as.Date(time_series$Date)
-Days$Date <- as.Date(Days$Date)
-
-# Now join again
-time_series <- left_join(Days, time_series, by = "Date")
-
-# Check
-dim(time_series)
-head(time_series)
 ```
