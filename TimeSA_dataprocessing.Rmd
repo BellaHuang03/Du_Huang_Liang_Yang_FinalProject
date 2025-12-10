@@ -1,0 +1,74 @@
+1.  Session Set up :
+```{r, message = FALSE}
+library(tidyverse)
+library(lubridate)  
+library(zoo)
+library(trend)
+library(here)
+library(ggplot2)
+library(Kendall)
+getwd()
+
+mytheme <- theme_classic(base_size = 14) +
+  theme(axis.text = element_text(color = "black"),
+        panel.background = element_rect(fill ="white", color = NA),
+        plot.background = element_rect(fill = "white", color = NA),
+        plot.title = element_text(
+          hjust = 0.5,         
+          face = "bold"),
+        legend.position = "middle")
+
+
+```
+2. Import the ten datasets from the time_series folder in the egrid_Data data folder. 
+```{r, message = FALSE}
+
+folder <- "~/DataExplorationFinalProjetc/egrid_Data/time_series"
+
+files <- list.files(
+  folder, 
+  pattern = "\\.csv$",    # match .csv files
+  full.names = TRUE
+)
+
+time_series <- files %>%
+  set_names(basename(.)) %>%     # keeps track of source file
+  map_dfr(~ read_csv(.x, show_col_types = FALSE), .id = "source_file")
+
+glimpse(time_series)
+
+
+```
+3. Set date column as a date class.
+
+4. Wrangle  dataset so that it only contains the columns Date, Daily.Max.8.hour.Ozone.Concentration, and DAILY_AQI_VALUE. 
+
+5. Notice there are a few days in each year that are missing ozone concentrations. We want to generate a daily dataset, so we will need to fill in any missing days with NA. Create a new data frame that contains a sequence of dates from 2010-01-01 to 2019-12-31 (hint: `as.data.frame(seq())`). Call this new data frame Days. Rename the column name in Days to "Date".
+
+6. Use a `left_join` to combine the data frames. Specify the correct order of data frames within this function so that the final dimensions are 3652 rows and 3 columns. Call your combined data frame time_series 
+```{r, message = FALSE}
+time_series$Year <- as.Date(time_series$Datayear, format = "%m/%d/%Y")
+
+time_series <- time_series[, c("Date", 
+                                   "Daily.Max.8.hour.Ozone.Concentration", 
+                                   "DAILY_AQI_VALUE")]
+head(time_series)
+
+# 5
+Days <- as.data.frame(seq(from = as.Date("2010-01-01"),
+                          to   = as.Date("2019-12-31"),
+                          by   = "day"))
+names(Days)[1] <- "Date"
+head(Days)
+
+# 6
+time_series$Date <- as.Date(time_series$Date)
+Days$Date <- as.Date(Days$Date)
+
+# Now join again
+time_series <- left_join(Days, time_series, by = "Date")
+
+# Check
+dim(time_series)
+head(time_series)
+```
