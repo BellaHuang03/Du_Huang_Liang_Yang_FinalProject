@@ -7,6 +7,9 @@ library(trend)
 library(here)
 library(ggplot2)
 library(Kendall)
+library(dplyr)
+library(readr)
+library(purrr)
 getwd()
 
 mytheme <- theme_classic(base_size = 14) +
@@ -23,35 +26,129 @@ mytheme <- theme_classic(base_size = 14) +
 2. Import the ten datasets from the time_series folder in the egrid_Data data folder. 
 ```{r, message = FALSE}
 
-folder <- "~/DataExplorationFinalProjetc/egrid_Data/time_series"
+# ts folder 
+folder <- path.expand("~/DataExplorationFinalProjetc/egrid_Data/time_series")
 
-files <- list.files(
-  folder, 
-  pattern = "\\.csv$",    # match .csv files
-  full.names = TRUE
-)
+# list files
+files <- list.files(folder, pattern = "^ts20\\d{2}\\.csv$", full.names = TRUE)
+print(files)
 
-time_series <- files %>%
-  set_names(basename(.)) %>%     # keeps track of source file
+# read and combine, fill missing cols with NA
+all_ts <- files %>%
+  set_names(basename(.)) %>%            
   map_dfr(~ read_csv(.x, show_col_types = FALSE), .id = "source_file")
 
-glimpse(time_series)
+# preview
+dim(all_ts)
+names(all_ts)
+glimpse(all_ts)
 
 
 ```
 3. Set date column as a date class.
 
-4. Wrangle  dataset so that it only contains the columns Date, Daily.Max.8.hour.Ozone.Concentration, and DAILY_AQI_VALUE. 
-
-5. Notice there are a few days in each year that are missing ozone concentrations. We want to generate a daily dataset, so we will need to fill in any missing days with NA. Create a new data frame that contains a sequence of dates from 2010-01-01 to 2019-12-31 (hint: `as.data.frame(seq())`). Call this new data frame Days. Rename the column name in Days to "Date".
-
-6. Use a `left_join` to combine the data frames. Specify the correct order of data frames within this function so that the final dimensions are 3652 rows and 3 columns. Call your combined data frame time_series 
 ```{r, message = FALSE}
-names(time_series)
-grep("Year", names(time_series), value = TRUE)
-year_chars <- as.character(time_series$YearCol)
-grep("Year", names(time_series), value = TRUE)
 
-names(time_series)
+valid_year_rows <- grepl("^\\d{4}$", all_ts$`Data Year`)
+valid_year_rows
 
+all_ts <- all_ts[-1, ]
+all_ts
+
+#dataexploration
+
+unique(all_ts$`Plant primary coal/oil/gas/ other fossil fuel category`)
+table(all_ts$`Plant primary coal/oil/gas/ other fossil fuel category`)
+all_ts$`Plant primary fuel category`
+
+top6_species <- head(sort(table(all_ts$`Plant primary coal/oil/gas/ other fossil fuel category`), decreasing = TRUE), 6)
+head(top6_species)
+
+```
+
+4. check if there's missing data
+```{r, message = FALSE}
+colSums(is.na(all_ts))
+
+all_ts$FuelUnified <- dplyr::coalesce(
+  all_ts$`Plant primary fuel category`,
+  all_ts$`Plant primary coal/oil/gas/ other fossil fuel category`
+)
+
+
+
+```
+
+```{r, message = FALSE}
+all_ts <- all_ts %>%
+  filter(
+    `Plant nameplate capacity (MW)` != "NAMEPCAP",
+    `Plant annual net generation (MWh)` != "PLNGENAN",
+    `Plant primary fuel category` != "PLFUELCT",
+    `Plant name` != "PNAME",
+    `Data Year` != "YEAR"
+  )
+all_ts <- all_ts %>%
+  mutate(
+    cap_mw = parse_number(`Plant nameplate capacity (MW)`),
+    gen_mwh = parse_number(`Plant annual net generation (MWh)`)
+  )
+
+all_ts <- all_ts %>%
+  mutate(
+    Data_Year_char = as.character(`Data Year`),
+    Data_Year_num  = as.integer(Data_Year_char)
+  )
+
+table(all_ts$Data_Year_num, useNA = "ifany")
+
+
+annual_totals <- all_ts %>%
+  filter(FuelUnified %in% c("WIND", "SOLAR")) %>%
+  group_by(Data_Year_num, FuelUnified) %>%
+  summarise(
+    total_capacity_MW = sum(cap_mw, na.rm = TRUE),
+    n_plants = n(),
+    .groups = "drop"
+  )
+
+
+
+```
+
+
+
+```{r, message = FALSE}
+
+ggplot(annual_totals, aes(x = Data_Year_num, y = total_capacity_MW, color = FuelUnified)) +
+  geom_line(linewidth = 1.3) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = FALSE, linetype = "dashed") +
+  labs(
+    title = "Wind vs Solar Capacity Additions (2018–2023)",
+    x = "Year",
+    y = "Total Nameplate Capacity (MW)",
+    color = "Technology"
+  ) +
+  theme_minimal(base_size = 14)
+
+```
+>Is wind  increasing or decreasing?
+Is solar accelerating faster?
+Which is more volatile?
+
+```{r, message = FALSE}
+wind_trend <- lm(total_capacity_MW ~ Data_Year_num,
+                 data = annual_totals %>% filter(FuelUnified == "WIND"))
+
+solar_trend <- lm(total_capacity_MW ~ Data_Year_num,
+                  data = annual_totals %>% filter(FuelUnified == "SOLAR"))
+
+summary(wind_trend)
+summary(solar_trend)
+
+
+```
+
+```{r, message = FALSE}
 ```
