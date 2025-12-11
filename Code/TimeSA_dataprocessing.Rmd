@@ -24,39 +24,48 @@ mytheme <- theme_classic(base_size = 14) +
 
 ```
 2. Import the ten datasets from the time_series folder in the egrid_Data data folder. 
-```{r, message = FALSE}
+```{r, echo=FALSE}
+library(readr)
+ts2018 <- read_csv("Data/Raw/egrid_Data/time_series/ts2018.csv")
+ts2019 <- read_csv("Data/Raw/egrid_Data/time_series/ts2019.csv")
+ts2020 <- read_csv("Data/Raw/egrid_Data/time_series/ts2020.csv")
+ts2021 <- read_csv("Data/Raw/egrid_Data/time_series/ts2021.csv")
+ts2022 <- read_csv("Data/Raw/egrid_Data/time_series/ts2022.csv")
+ts2023 <- read_csv("Data/Raw/egrid_Data/time_series/ts2023.csv")
 
-# ts folder 
-folder <- path.expand("~/DataExplorationFinalProjetc/egrid_Data/time_series")
+```
 
-# list files
-files <- list.files(folder, pattern = "^ts20\\d{2}\\.csv$", full.names = TRUE)
-print(files)
+```{r, echo=FALSE}
+library(dplyr)
 
-# read and combine, fill missing cols with NA
-all_ts <- files %>%
-  set_names(basename(.)) %>%            
-  map_dfr(~ read_csv(.x, show_col_types = FALSE), .id = "source_file")
+all_ts <- bind_rows(
+  ts2018,
+  ts2019,
+  ts2020,
+  ts2021,
+  ts2022,
+  ts2023,
+  .id = "source_file"
+)
+
+# fill all missing value with NA
+all_ts <- all_ts %>%
+  mutate(across(everything(), ~ na_if(.x, "")))
 
 # preview
 dim(all_ts)
 names(all_ts)
 glimpse(all_ts)
-
-
 ```
+
 3. Set date column as a date class.
 
 ```{r, message = FALSE}
+# keep only rows where Data Year is exactly 4 digits
+valid_year_rows <- grepl("^\\d{4}$", as.character(all_ts$`Data Year`))
+all_ts <- all_ts[valid_year_rows, ]
 
-valid_year_rows <- grepl("^\\d{4}$", all_ts$`Data Year`)
-valid_year_rows
-
-all_ts <- all_ts[-1, ]
-all_ts
-
-#dataexploration
-
+#data exploration
 unique(all_ts$`Plant primary coal/oil/gas/ other fossil fuel category`)
 table(all_ts$`Plant primary coal/oil/gas/ other fossil fuel category`)
 all_ts$`Plant primary fuel category`
@@ -75,8 +84,6 @@ all_ts$FuelUnified <- dplyr::coalesce(
   all_ts$`Plant primary coal/oil/gas/ other fossil fuel category`
 )
 
-
-
 ```
 
 ```{r, message = FALSE}
@@ -84,10 +91,14 @@ all_ts <- all_ts %>%
   filter(
     `Plant nameplate capacity (MW)` != "NAMEPCAP",
     `Plant annual net generation (MWh)` != "PLNGENAN",
-    `Plant primary fuel category` != "PLFUELCT",
     `Plant name` != "PNAME",
     `Data Year` != "YEAR"
+  ) %>%
+  select(
+    -source_file,
+    -`Plant primary fuel category`
   )
+
 all_ts <- all_ts %>%
   mutate(
     cap_mw = parse_number(`Plant nameplate capacity (MW)`),
@@ -117,8 +128,8 @@ annual_totals <- all_ts %>%
 ```
 
 
-
-```{r, message = FALSE}
+5. Plot the trend for generating capacity over 2018-2023 for wind and solar
+```{plot the trend for wind and solar, message = FALSE}
 
 ggplot(annual_totals, aes(x = Data_Year_num, y = total_capacity_MW, color = FuelUnified)) +
   geom_line(linewidth = 1.3) +
@@ -137,7 +148,7 @@ ggplot(annual_totals, aes(x = Data_Year_num, y = total_capacity_MW, color = Fuel
 Is solar accelerating faster?
 Which is more volatile?
 
-```{r, message = FALSE}
+```{statistical trend analysis for wind and solar, message = FALSE}
 wind_trend <- lm(total_capacity_MW ~ Data_Year_num,
                  data = annual_totals %>% filter(FuelUnified == "WIND"))
 
@@ -149,6 +160,13 @@ summary(solar_trend)
 
 
 ```
-
+6. Plot the trend for total generation
 ```{r, message = FALSE}
+
 ```
+
+7.
+```{r}
+
+```
+
