@@ -1,0 +1,110 @@
+---
+title: "Spatial Analysis"
+author: "Bella Huang, Cecilia Liang, Isabella Yang, Michelle Du"
+date: "2025-12-11"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+Note: Most of the data has been processed outside of the repository due to large data size.
+
+```{r setup, include=FALSE}
+# Set your working directory
+library(here)
+here()
+
+# Load your packages
+library(tidyverse)
+library(lubridate)
+library(dplyr)
+
+# Packages for Time Series Analysis
+library(trend)
+library(zoo)
+
+# Packages for Spatial Analysis
+library(RColorBrewer)
+library(sf)
+library(leaflet)
+library(mapview); mapviewOptions(fgb = FALSE)
+
+# Set your ggplot theme
+my_theme <- theme_minimal() +
+  theme(
+    # text
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 14),
+    axis.title.y = element_text(size = 12, margin = margin(r = 8)),
+    axis.text = element_text(size = 10),
+    # lines & grids
+    axis.ticks = element_line(linewidth = 0.3),
+    panel.grid.major = element_line(linewidth = 0.2, linetype = "dashed", color = "grey75"),
+    panel.grid.minor = element_blank(),
+    # backgrounds
+    plot.background = element_rect(fill = "white", color = NA),
+    panel.background = element_rect(fill = "white", color = "grey85"),
+    legend.key = element_rect(fill = "white", color = NA),
+)
+
+theme_set(my_theme)
+
+# Load your datasets
+egrid2018 <- read.csv(here("Data/Raw/egrid_Data/Spatial_Analysis/egrid2018_data_v2.csv"), stringsAsFactors = TRUE)
+egrid2019 <- read.csv(here("Data/Raw/egrid_Data/Spatial_Analysis/egrid2019_data.csv"), stringsAsFactors = TRUE)
+egrid2020 <- read.csv(here("Data/Raw/egrid_Data/Spatial_Analysis/eGRID2020_Data_v2.csv"), stringsAsFactors = TRUE)
+egrid2021 <- read.csv(here("Data/Raw/egrid_Data/Spatial_Analysis/eGRID2021_data.csv"), stringsAsFactors = TRUE)
+egrid2022 <- read.csv(here("Data/Raw/egrid_Data/Spatial_Analysis/egrid2022_data.csv"), stringsAsFactors = TRUE)
+egrid2023 <- read.csv(here("Data/Raw/egrid_Data/Spatial_Analysis/egrid2023_data_rev2.csv"), stringsAsFactors = TRUE)
+
+# Clean out empty cells for long, lat and fuel type
+egrid2018_clean <- egrid2018[-1, ] %>%              
+  filter(Plant.latitude  != "",
+         Plant.longitude != "") %>%
+  filter(Plant.primary.coal.oil.gas..other.fossil.fuel.category != "")
+
+egrid2019_clean <- egrid2019[-1, ] %>%              
+  filter(Plant.latitude  != "",
+         Plant.longitude != "") %>%
+  filter(Plant.primary.coal.oil.gas..other.fossil.fuel.category != "")
+
+egrid2020_clean <- egrid2020[-1, ] %>%              
+  filter(Plant.latitude  != "",
+         Plant.longitude != "") %>%
+  filter(Plant.primary.fuel.category != "") # notice this column has changed the name since 2020
+
+egrid2021_clean <- egrid2021[-1, ] %>%             
+  filter(Plant.latitude  != "",
+         Plant.longitude != "") %>%
+  filter(Plant.primary.fuel.category != "")
+
+egrid2022_clean <- egrid2022[-1, ] %>%             
+  filter(Plant.latitude  != "",
+         Plant.longitude != "") %>%
+  filter(Plant.primary.fuel.category != "")
+
+egrid2023_clean <- egrid2023[-1, ] %>%             
+  filter(Plant.latitude  != "",
+         Plant.longitude != "") %>%
+  filter(Plant.primary.fuel.category != "")
+
+# Writes clean csv: no empty cells or n/a
+write.csv(egrid2018_clean, 
+          here("Data", "Processed", "Spatial_analysis", "egrid2018_clean.csv"), 
+          row.names = FALSE)
+write.csv(egrid2019_clean, 
+          here("Data", "Processed", "Spatial_analysis", "egrid2019_clean.csv"), 
+          row.names = FALSE)
+write.csv(egrid2020_clean, 
+          here("Data", "Processed", "Spatial_analysis", "egrid2020_clean.csv"), 
+          row.names = FALSE)
+write.csv(egrid2021_clean, 
+          here("Data", "Processed", "Spatial_analysis", "egrid2021_clean.csv"), 
+          row.names = FALSE)
+write.csv(egrid2022_clean, 
+          here("Data", "Processed", "Spatial_analysis", "egrid2022_clean.csv"), 
+          row.names = FALSE)
+write.csv(egrid2023_clean, 
+          here("Data", "Processed", "Spatial_analysis", "egrid2023_clean.csv"), 
+          row.names = FALSE)
+```
+
