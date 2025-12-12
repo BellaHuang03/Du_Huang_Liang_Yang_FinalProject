@@ -27,8 +27,17 @@ library(lubridate)
 library(dplyr)
 
 # Packages for Time Series Analysis
+library(broom)
+library(Kendall)
 library(trend)
+library(lubridate)
 library(zoo)
+library(readr)
+library(ggplot2)
+library(forcats)
+library(cowplot)
+library(purrr)
+library(tibble)
 
 # Packages for Spatial Analysis
 library(RColorBrewer)
