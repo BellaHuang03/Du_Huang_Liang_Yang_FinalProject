@@ -2,8 +2,10 @@
 title: "Spatial & Temporal Growth of Renewable Energy Capacity in the U.S."
 author: "Bella Huang, Cecilia Liang, Isabella Yang, Michelle Du"
 date: "2025-12-05"
-output: pdf_document
-editor_options: 
+output:
+  html_document:
+    df_print: paged
+editor_options:
   chunk_output_type: console
 ---
 \newpage
@@ -32,7 +34,8 @@ library(zoo)
 library(RColorBrewer)
 library(sf)
 library(leaflet)
-library(mapview); mapviewOptions(fgb = FALSE)
+library(mapview); mapviewOptions(fgb = FALSE); mapviewOptions(basemaps = "CartoDB.Positron")
+
 
 # Set your ggplot theme
 my_theme <- theme_minimal() +
@@ -53,21 +56,21 @@ my_theme <- theme_minimal() +
 
 theme_set(my_theme)
 
-# Load your datasets
-egrid2018 <- read.csv(here("egrid_Data/egrid2018_data_v2.csv"), stringsAsFactors = TRUE)
-egrid2019 <- read.csv(here("egrid_Data/egrid2019_data.csv"), stringsAsFactors = TRUE)
-egrid2020 <- read.csv(here("egrid_Data/eGRID2020_Data_v2.csv"), stringsAsFactors = TRUE)
-egrid2021 <- read.csv(here("egrid_Data/eGRID2021_data.csv"), stringsAsFactors = TRUE)
-egrid2022 <- read.csv(here("egrid_Data/egrid2022_data.csv"), stringsAsFactors = TRUE)
-egrid2023 <- read.csv(here("egrid_Data/egrid2023_data_rev2.csv"), stringsAsFactors = TRUE)
+# Datasets for spatial analysis (clean)
+egrid2018 <- read.csv(here("Data/Processed/Spatial_analysis/egrid2018_clean.csv"), stringsAsFactors = TRUE)
+egrid2019 <- read.csv(here("Data/Processed/Spatial_analysis/egrid2019_clean.csv"), stringsAsFactors = TRUE)
+egrid2020 <- read.csv(here("Data/Processed/Spatial_analysis/egrid2020_clean.csv"), stringsAsFactors = TRUE)
+egrid2021 <- read.csv(here("Data/Processed/Spatial_analysis/egrid2021_clean.csv"), stringsAsFactors = TRUE)
+egrid2022 <- read.csv(here("Data/Processed/Spatial_analysis/egrid2022_clean.csv"), stringsAsFactors = TRUE)
+egrid2023 <- read.csv(here("Data/Processed/Spatial_analysis/egrid2023_clean.csv"), stringsAsFactors = TRUE)
 
 # Datasets for time series analysis
-ts2018 <- read.csv(here("egrid_Data/time_series/ts2018.csv"), stringsAsFactors = TRUE)
-ts2019 <- read.csv(here("egrid_Data/time_series/ts2019.csv"), stringsAsFactors = TRUE)
-ts2020 <- read.csv(here("egrid_Data/time_series/ts2020.csv"), stringsAsFactors = TRUE)
-ts2021 <- read.csv(here("egrid_Data/time_series/ts2021.csv"), stringsAsFactors = TRUE)
-ts2022 <- read.csv(here("egrid_Data/time_series/ts2022.csv"), stringsAsFactors = TRUE)
-ts2023 <- read.csv(here("egrid_Data/time_series/ts2023.csv"), stringsAsFactors = TRUE)
+ts2018 <- read.csv(here("Data/Raw/egrid_Data/time_series/ts2018.csv"), stringsAsFactors = TRUE)
+ts2019 <- read.csv(here("Data/Raw/egrid_Data/time_series/ts2019.csv"), stringsAsFactors = TRUE)
+ts2020 <- read.csv(here("Data/Raw/egrid_Data/time_series/ts2020.csv"), stringsAsFactors = TRUE)
+ts2021 <- read.csv(here("Data/Raw/egrid_Data/time_series/ts2021.csv"), stringsAsFactors = TRUE)
+ts2022 <- read.csv(here("Data/Raw/egrid_Data/time_series/ts2022.csv"), stringsAsFactors = TRUE)
+ts2023 <- read.csv(here("Data/Raw/egrid_Data/time_series/ts2023.csv"), stringsAsFactors = TRUE)
 
 ```
 
@@ -88,7 +91,197 @@ From this project, we plan to use the PLNT(Plant) tab from U.S. Environmental Pr
 
 # Exploratory Analysis 
 
+Spatial Exploratory Analysis
 
+1. Explore all US counties.
+
+```{r, counties shapefile, echo=FALSE, message=FALSE}
+# Read in all US counties shapefile into an sf dataframe
+US_counties_sf <- read_sf(here("Data/Spatial/cb_2018_us_county_20m.shp")) 
+st_crs(US_counties_sf)
+mapview(US_counties_sf)
+```
+
+```{r, convert df to sf, echo=FALSE, include=FALSE}
+egrid2018_sf <- egrid2018 %>%
+  st_as_sf(coords = c('Plant.longitude', 'Plant.latitude'), crs = 4269, remove = FALSE)
+egrid2019_sf <- egrid2019 %>%
+  st_as_sf(coords = c('Plant.longitude', 'Plant.latitude'), crs = 4269, remove = FALSE)
+egrid2020_sf <- egrid2020 %>%
+  st_as_sf(coords = c('Plant.longitude', 'Plant.latitude'), crs = 4269, remove = FALSE)
+egrid2021_sf <- egrid2021 %>%
+  st_as_sf(coords = c('Plant.longitude', 'Plant.latitude'), crs = 4269, remove = FALSE)
+egrid2022_sf <- egrid2022 %>%
+  st_as_sf(coords = c('Plant.longitude', 'Plant.latitude'), crs = 4269, remove = FALSE)
+egrid2023_sf <- egrid2023 %>%
+  st_as_sf(coords = c('Plant.longitude', 'Plant.latitude'), crs = 4269, remove = FALSE)
+```
+
+3. 2018 Electricity Plants Locations
+
+Mainland USA
+
+```{r, Mainland USA Locations, echo=FALSE, message=FALSE}
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2018_sf,
+          color = "darkblue",
+          size = 0.3) +
+  coord_sf(
+    xlim = c(-125, -65), 
+    ylim = c(24, 50)
+    ) +
+  labs(
+    title = "2018 Electricity Plants-Mainland USA",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+```
+
+Alaska
+
+```{r, Alaska Locations, echo=FALSE, message=FALSE}
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2018_sf,
+          color = "darkblue",
+          size = 1) +
+  coord_sf(
+    xlim = c(-179, -130),
+    ylim = c(51, 72) 
+    ) +
+  labs(
+    title = "2018 Electricity Plants-Alaska",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+```
+
+Hawaii
+
+```{r, Hawaii Locations, echo=FALSE, message=FALSE}
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2018_sf,
+          color = "darkblue",
+          size = 1) +
+  coord_sf(
+    xlim = c(-160.5, -154.5),
+    ylim = c(18.5, 22.5) 
+    ) +
+  labs(
+    title = "2018 Electricity Plants-Hawaii",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+```
+
+4. Catogorized Electricity Plant Type
+```{r, Mainland USA Fuel Types, echo=FALSE, message=FALSE}
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill  = "grey90",
+          color = "grey70") +
+  geom_sf(data = egrid2018_sf,
+          aes(color = Plant.primary.coal.oil.gas..other.fossil.fuel.category),
+          size  = 0.6,
+          alpha = 0.8) +
+  coord_sf(xlim = c(-125, -65), ylim = c(24, 50)) + 
+  scale_color_brewer(
+    palette = "Paired", 
+    name    = "Primary fuel type"
+  ) +
+  guides(color = guide_legend(
+    override.aes = list(size = 5) 
+  )) +
+  labs(
+    title    = "2018 Electricity Plants by Primary Fuel Type-Mainland USA",
+    x        = "Longitude",
+    y        = "Latitude"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+```
+
+```{r, Alaska Fuel Types, echo=FALSE, message=FALSE}
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill  = "grey90",
+          color = "grey70") +
+  geom_sf(data = egrid2018_sf,
+          aes(color = Plant.primary.coal.oil.gas..other.fossil.fuel.category),
+          size  = 0.6,
+          alpha = 0.8) +
+  coord_sf(xlim = c(-179, -130), ylim = c(51, 72)) + 
+  scale_color_brewer(
+    palette = "Paired", 
+    name    = "Primary fuel type"
+  ) +
+  guides(color = guide_legend(
+    override.aes = list(size = 5) 
+  )) +
+  labs(
+    title    = "2018 Electricity Plants by Primary Fuel Type-Alaska",
+    x        = "Longitude",
+    y        = "Latitude"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+```
+
+```{r, Hawaii Fuel Types, echo=FALSE, message=FALSE}
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill  = "grey90",
+          color = "grey70") +
+  geom_sf(data = egrid2018_sf,
+          aes(color = Plant.primary.coal.oil.gas..other.fossil.fuel.category),
+          size  = 0.6,
+          alpha = 0.8) +
+  coord_sf(xlim = c(-160.5, -154.5), ylim = c(18.5, 22.5)) +
+  scale_color_brewer(
+    palette = "Paired", 
+    name    = "Primary fuel type"
+  ) +
+  guides(color = guide_legend(
+    override.aes = list(size = 5) 
+  )) +
+  labs(
+    title    = "2018 Electricity Plants by Primary Fuel Type-Hawaii",
+    x        = "Longitude",
+    y        = "Latitude"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+```
+
+5. Map the pattern of number of unit/generator
+
+```{r}
+mapview(US_counties_sf,
+        col.regions = "gray90",
+        color = "gray50",
+        layer.name = "Counties") +
+  mapview(egrid2018_sf,
+          zcol = "Number.of.units",
+          col.regions = hcl.colors(30, "RdYlBu"),
+          at = seq(0, 70, by = 5),
+          cex = 3,              
+          alpha = 0.9,
+          layer.name = "Number of Generator")
+```
 
 \newpage
 
