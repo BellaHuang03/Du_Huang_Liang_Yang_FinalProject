@@ -1,15 +1,23 @@
 1.  Session Set up :
 ```{r, message = FALSE}
-library(tidyverse)
-library(lubridate)  
-library(zoo)
-library(trend)
-library(here)
-library(ggplot2)
-library(Kendall)
+# Core data manipulation
 library(dplyr)
-library(readr)
+library(tidyr)
 library(purrr)
+library(tibble)
+# Visualization
+library(ggplot2)
+library(forcats)
+library(cowplot)
+# Modeling & statistics
+library(broom)
+library(Kendall)
+library(trend)
+library(lubridate)
+library(zoo)
+library(readr)
+library(here)
+
 getwd()
 
 mytheme <- theme_classic(base_size = 14) +
@@ -25,7 +33,6 @@ mytheme <- theme_classic(base_size = 14) +
 ```
 2. Import the ten datasets from the time_series folder in the egrid_Data data folder. 
 ```{r, echo=FALSE}
-library(readr)
 ts2018 <- read_csv("Data/Raw/egrid_Data/time_series/ts2018.csv")
 ts2019 <- read_csv("Data/Raw/egrid_Data/time_series/ts2019.csv")
 ts2020 <- read_csv("Data/Raw/egrid_Data/time_series/ts2020.csv")
@@ -36,8 +43,6 @@ ts2023 <- read_csv("Data/Raw/egrid_Data/time_series/ts2023.csv")
 ```
 
 ```{r, echo=FALSE}
-library(dplyr)
-
 all_ts <- bind_rows(
   ts2018,
   ts2019,
@@ -75,10 +80,8 @@ head(top6_species)
 
 ```
 
-For each year, check the top 6 fuel type for egrid
+4. For each year, check the top 6 fuel type for egrid
 ```{r}
-library(dplyr)
-
 top6_fuels_2018 <- ts2018 %>%
   group_by(`Plant primary coal/oil/gas/ other fossil fuel category`) %>%
   summarise(
@@ -137,7 +140,7 @@ top6_fuels_2023 <- ts2023 %>%
 
 ```
 
-Combine them into one dataset
+5. Combine them into one dataset
 ```{r}
 top6_fuels_2018 <- top6_fuels_2018 %>% mutate(year = 2018)
 top6_fuels_2019 <- top6_fuels_2019 %>% mutate(year = 2019)
@@ -154,8 +157,6 @@ top6_long <- bind_rows(
   top6_fuels_2022,
   top6_fuels_2023)
 
-library(tidyr)
-
 top6_wide <- top6_long %>%
   pivot_wider(
     id_cols = `Plant primary fuel category`,
@@ -165,7 +166,7 @@ top6_wide <- top6_long %>%
 ```
 
 
-4. check if there's missing data
+6. check if there's missing data
 ```{r, message = FALSE}
 colSums(is.na(all_ts))
 
@@ -217,9 +218,8 @@ annual_totals <- all_ts %>%
 ```
 
 
-5. Plot the trend for generating capacity over 2018-2023 for wind, solar, and hydro
+7. Plot the trend for generating capacity over 2018-2023 for wind, solar, and hydro
 ```{R, message = FALSE}
-library(ggplot2)
 ggplot(annual_totals, aes(x = Data_Year_num, y = total_capacity_MW, color = FuelUnified)) +
   geom_line(linewidth = 1.3) +
   geom_point(size = 3) +
@@ -249,11 +249,8 @@ summary(solar_trend)
 
 ```
 
-Linear regression test
+7. Linear regression test
 ```{r}
-library(dplyr)
-library(broom)
-
 # Filter to the three technologies you plotted:
 techs <- c("HYDRO", "SOLAR", "WIND")
 
@@ -269,9 +266,6 @@ trend_lm
 
 Mann–Kendall Non-parametric Trend Test
 ```{r}
-library(Kendall)
-library(dplyr)
-
 techs <- c("HYDRO", "SOLAR", "WIND")
 
 mk_results <- annual_totals %>%
@@ -287,13 +281,8 @@ mk_results
 
 ```
 
-Time series graph:
+8. Time series graph:
 ```{r}
-# Packages
-library(dplyr)
-library(ggplot2)
-library(cowplot)   # for plot_grid
-
 # Function to produce two-panel trend plot for a fuel type
 two_panel_trend_plot <- function(tech_name,
                                  df = annual_totals,
@@ -382,21 +371,22 @@ two_panel_trend_plot <- function(tech_name,
 
 ```
 
+7a). Wind - ts
 ```{r}
 two_panel_trend_plot("WIND")
 
 ```
-Solar:
+7b). Solar - ts
 ```{r}
 two_panel_trend_plot("SOLAR")
 
 ```
-Hydro
+7c). Hydro - ts
 ```{r}
 two_panel_trend_plot("HYDRO")
 ```
 
-Try 3 panel time series:
+8. Try 3 panel time series:
 ```{r}
 three_panel_trend_plot <- function(tech_name,
                                    df = annual_totals,
@@ -481,24 +471,24 @@ three_panel_trend_plot <- function(tech_name,
 }
 ```
 
+8a). Wind
 ```{r}
 three_panel_trend_plot("WIND")
 ```
-
+8b). solar
 ```{r}
 three_panel_trend_plot("SOLAR")
 ```
 
-HYDRO
+8c). HYDRO
 ```{r}
 three_panel_trend_plot("HYDRO")
 ```
 
 
 
-6. Plot the trend for generation over 2018-2023 for wind, solar, and hydro
+9. Plot the trend for generation over 2018-2023 for wind, solar, and hydro
 ```{r, message = FALSE}
-library(ggplot2)
 ggplot(annual_totals, aes(x = Data_Year_num, y = total_generation_MWh, color = FuelUnified)) +
   geom_line(linewidth = 1.3) +
   geom_point(size = 3) +
@@ -513,7 +503,7 @@ ggplot(annual_totals, aes(x = Data_Year_num, y = total_generation_MWh, color = F
 
 ```
 
-7.
+10. combine them together to help compare
 ```{r}
 # Graph 1
 p1 <- ggplot(annual_totals, aes(x = Data_Year_num, y = total_capacity_MW, color = FuelUnified)) +
@@ -546,7 +536,7 @@ cowplot::plot_grid(p1, p2, ncol = 1, align = "hv")
 
 ```
 
-For each year, find the top 5 states for wind, solar, and hydro
+11. For each year, find the top 5 states for wind, solar, and hydro
 ```{r}
 # 1. Filter to the three technologies and valid rows
 techs <- c("WIND", "SOLAR", "HYDRO")
@@ -572,13 +562,8 @@ print(top5_states_by_year)
 
 ```
 
-Change the display of the tables
+12. Change the display of the tables
 ```{r}
-library(dplyr)
-library(purrr)
-library(tibble)
-library(knitr)
-
 # years and top-N
 years <- 2018:2023
 top_n <- 5
@@ -612,6 +597,7 @@ solar_table <- build_top5_table(by_state_year, "SOLAR", years, top_n)
 hydro_table  <- build_top5_table(by_state_year, "HYDRO",  years, top_n)
 ```
 
+12. prepare for state-year table
 ```{r}
 get_state_fuel_data <- function(df, state_abbrev, fuel_type) {
   df %>%
@@ -711,7 +697,6 @@ Do early adopters have faster renewable expansion?
 early adopters: top states for each technology
 a). aggregate into a state–year–technology table
 ```{r}
-library(tidyr) 
 state_year_tech <- by_state_year %>%
   rename(State = `Plant state abbreviation`)
 
@@ -766,9 +751,6 @@ lm(HYDRO_abs_growth ~ HYDRO_MW_2018, data = growth_df) %>% summary()
 ```
 Summary table
 ```{r}
-library(broom)
-library(dplyr)
-
 # Run regressions for each tech
 lm_solar <- lm(SOLAR_abs_growth ~ SOLAR_MW_2018, data = growth_df)
 lm_wind  <- lm(WIND_abs_growth  ~ WIND_MW_2018,  data = growth_df)
@@ -816,10 +798,6 @@ e_annual_totals <- all_ts %>%
     n_plants = n(),
     .groups = "drop"
   )
-
-library(ggplot2)
-library(dplyr)
-library(forcats)
 
 # Plot
 ggplot(e_annual_totals, 
