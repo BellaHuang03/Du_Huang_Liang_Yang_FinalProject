@@ -1,0 +1,479 @@
+---
+title: "Spatial_Analysis_DataAnalysis"
+author: "Bella Huang, Cecilia Liang, Isabella Yang, Yimei Du"
+date: "2025-12-11"
+output: html
+editor_options: 
+  chunk_output_type: console
+---
+
+# 1. Set up
+```{r setup, include=FALSE}
+# Set your working directory
+library(here)
+here()
+
+# Load your packages
+library(tidyverse)
+library(lubridate)
+library(dplyr)
+
+# Packages for Time Series Analysis
+library(trend)
+library(zoo)
+
+# Packages for Spatial Analysis
+library(RColorBrewer)
+library(sf)
+library(leaflet)
+library(mapview); mapviewOptions(fgb = FALSE)
+
+# Set your ggplot theme
+my_theme <- theme_minimal() +
+  theme(
+    # text
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 14),
+    axis.title.y = element_text(size = 12, margin = margin(r = 8)),
+    axis.text = element_text(size = 10),
+    # lines & grids
+    axis.ticks = element_line(linewidth = 0.3),
+    panel.grid.major = element_line(linewidth = 0.2, linetype = "dashed", color = "grey75"),
+    panel.grid.minor = element_blank(),
+    # backgrounds
+    plot.background = element_rect(fill = "white", color = NA),
+    panel.background = element_rect(fill = "white", color = "grey85"),
+    legend.key = element_rect(fill = "white", color = NA),
+)
+
+theme_set(my_theme)
+
+# Load data (cleaned)
+egrid2018 <- read.csv(here("Data/Processed/Spatial_analysis/egrid2018_clean.csv"), stringsAsFactors = TRUE)
+egrid2019 <- read.csv(here("Data/Processed/Spatial_analysis/egrid2019_clean.csv"), stringsAsFactors = TRUE)
+egrid2020 <- read.csv(here("Data/Processed/Spatial_analysis/egrid2020_clean.csv"), stringsAsFactors = TRUE)
+egrid2021 <- read.csv(here("Data/Processed/Spatial_analysis/egrid2021_clean.csv"), stringsAsFactors = TRUE)
+egrid2022 <- read.csv(here("Data/Processed/Spatial_analysis/egrid2022_clean.csv"), stringsAsFactors = TRUE)
+egrid2023 <- read.csv(here("Data/Processed/Spatial_analysis/egrid2023_clean.csv"), stringsAsFactors = TRUE)
+```
+
+
+# 2. Load Counties Shapefile
+```{r, counties shapefile}
+# Read in all US counties shapefile into an sf dataframe
+US_counties_sf <- read_sf(here("Data/Spatial/cb_2018_us_county_20m.shp")) 
+st_crs(US_counties_sf)
+mapview(US_counties_sf)
+```
+# 3. Convert dataframe to a spatial features ("sf")
+```{r, convert df to sf}
+egrid2018_sf <- egrid2018 %>%
+  st_as_sf(coords = c('Plant.longitude', 'Plant.latitude'), crs = 4269, remove = FALSE)
+
+str(egrid2018_sf)
+
+egrid2019_sf <- egrid2019 %>%
+  st_as_sf(coords = c('Plant.longitude', 'Plant.latitude'), crs = 4269, remove = FALSE)
+
+str(egrid2019_sf)
+
+egrid2020_sf <- egrid2020 %>%
+  st_as_sf(coords = c('Plant.longitude', 'Plant.latitude'), crs = 4269, remove = FALSE)
+
+str(egrid2020_sf)
+
+egrid2021_sf <- egrid2021 %>%
+  st_as_sf(coords = c('Plant.longitude', 'Plant.latitude'), crs = 4269, remove = FALSE)
+
+str(egrid2021_sf)
+
+egrid2022_sf <- egrid2022 %>%
+  st_as_sf(coords = c('Plant.longitude', 'Plant.latitude'), crs = 4269, remove = FALSE)
+
+str(egrid2022_sf)
+
+egrid2023_sf <- egrid2023 %>%
+  st_as_sf(coords = c('Plant.longitude', 'Plant.latitude'), crs = 4269, remove = FALSE)
+
+str(egrid2023_sf)
+```
+# 4. Map Electricity Plants Locations
+1. 2018 Electricity Plants Locations - Wind Power
+```{r, Mainland USA, Wind Power}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2018_sf %>% 
+            filter(Plant.primary.coal.oil.gas..other.fossil.fuel.category == "WIND"),
+          color = "saddlebrown",
+          size = 0.5) +
+  coord_sf(
+    xlim = c(-125, -65), 
+    ylim = c(24, 50)
+  ) +
+  labs(
+    title = "2018 Wind Electricity Plants - Alaska",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+```{r, Alaska, Wind power}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2018_sf %>% 
+            filter(Plant.primary.coal.oil.gas..other.fossil.fuel.category == "WIND"),
+          color = "saddlebrown",
+          size = 1) +
+  coord_sf(
+    xlim = c(-179, -130),
+    ylim = c(51, 72)
+  ) +
+  labs(
+    title = "2018 Wind Electricity Plants - Alaska",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+2. 2018 Electricity Plants Locations - hydro Power
+
+```{r, Mainland USA, hydro Power}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2018_sf %>% 
+            filter(Plant.primary.coal.oil.gas..other.fossil.fuel.category == "HYDRO"),
+          color = "darkblue",
+          size = 0.5) +
+  coord_sf(
+    xlim = c(-125, -65), 
+    ylim = c(24, 50)
+  ) +
+  labs(
+    title = "2018 Wind Electricity Plants - Alaska",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+```{r, Alaska, hydro power}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2018_sf %>% 
+            filter(Plant.primary.coal.oil.gas..other.fossil.fuel.category == "HYDRO"),
+          color = "darkblue",
+          size = 1) +
+  coord_sf(
+    xlim = c(-179, -130),
+    ylim = c(51, 72)
+  ) +
+  labs(
+    title = "2018 Wind Electricity Plants - Alaska",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+2. 2018 Electricity Plants Locations - solar Power
+
+```{r, Mainland USA, solar Power}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2018_sf %>% 
+            filter(Plant.primary.coal.oil.gas..other.fossil.fuel.category == "SOLAR"),
+          color = "orange",
+          size = 0.5) +
+  coord_sf(
+    xlim = c(-125, -65), 
+    ylim = c(24, 50)
+  ) +
+  labs(
+    title = "2018 Wind Electricity Plants - Alaska",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+```{r, Alaska, solar power}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2018_sf %>% 
+            filter(Plant.primary.coal.oil.gas..other.fossil.fuel.category == "SOLAR"),
+          color = "darkblue",
+          size = 1) +
+  coord_sf(
+    xlim = c(-179, -130),
+    ylim = c(51, 72)
+  ) +
+  labs(
+    title = "2018 Wind Electricity Plants - Alaska",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+2. 2023 Electricity Plants Locations - wind Power
+
+```{r, Mainland USA, wind Power}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2023_sf %>% 
+            filter(Plant.primary.fuel.category == "WIND"),
+          color = "saddlebrown",
+          size = 0.5) +
+  coord_sf(
+    xlim = c(-125, -65), 
+    ylim = c(24, 50)
+  ) +
+  labs(
+    title = "2023 Wind Electricity Plants - Alaska",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+```{r, Alaska, wind power}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2023_sf %>% 
+            filter(Plant.primary.fuel.category == "WIND"),
+          color = "saddlebrown",
+          size = 1) +
+  coord_sf(
+    xlim = c(-179, -130),
+    ylim = c(51, 72)
+  ) +
+  labs(
+    title = "2023 Wind Electricity Plants - Alaska",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+
+```{r, Mainland USA, hydro Power}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2023_sf %>% 
+            filter(Plant.primary.fuel.category == "HYDRO"),
+          color = "darkblue",
+          size = 0.5) +
+  coord_sf(
+    xlim = c(-125, -65), 
+    ylim = c(24, 50)
+  ) +
+  labs(
+    title = "2023 Wind Electricity Plants - Alaska",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+```{r, Alaska, wind power}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2023_sf %>% 
+            filter(Plant.primary.fuel.category == "HYDRO"),
+          color = "darkblue",
+          size = 1) +
+  coord_sf(
+    xlim = c(-179, -130),
+    ylim = c(51, 72)
+  ) +
+  labs(
+    title = "2023 Wind Electricity Plants - Alaska",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+```{r, Mainland USA, solar Power}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2023_sf %>% 
+            filter(Plant.primary.fuel.category == "SOLAR"),
+          color = "orange",
+          size = 0.5) +
+  coord_sf(
+    xlim = c(-125, -65), 
+    ylim = c(24, 50)
+  ) +
+  labs(
+    title = "2023 Solar Electricity Plants - Alaska",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+```{r, Alaska, solar power}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2023_sf %>% 
+            filter(Plant.primary.fuel.category == "SOLAR"),
+          color = "orange",
+          size = 1) +
+  coord_sf(
+    xlim = c(-179, -130),
+    ylim = c(51, 72)
+  ) +
+  labs(
+    title = "2023 Solar Electricity Plants - Alaska",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+3. 2023 Electricity Plants Locations - wind Power - TX
+
+```{r, TX_wind_power}
+library(dplyr)
+
+ggplot() +
+  geom_sf(
+    data = US_counties_sf %>% 
+      filter(STATEFP == "48"),   
+    fill = "grey90",
+    color = "grey50"
+  ) +
+ geom_sf(
+  data = egrid2023_sf %>% 
+    filter(Plant.state.abbreviation == "TX"),
+  aes(color = Plant.primary.fuel.category),
+  size = 1
+) +
+
+  coord_sf(
+    xlim = c(-107, -92),   
+  ylim = c(25, 37)
+  ) +
+  labs(
+    title = "2018 Wind Electricity Plants - Texas",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+```{r, WA_hydro_power}
+library(dplyr)
+
+ggplot() +
+  geom_sf(
+    data = US_counties_sf %>% 
+      filter(STATEFP == "53"),   
+    fill = "grey90",
+    color = "grey50"
+  ) +
+ geom_sf(
+  data = egrid2023_sf %>% 
+    filter(Plant.state.abbreviation == "WA"),
+  aes(color = Plant.primary.fuel.category),
+  size = 1
+) +
+
+  coord_sf(
+    xlim = c(-125, -116),   
+  ylim = c(45, 49)   
+  ) +
+  labs(
+    title = "2018 Wind Electricity Plants - Washington",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+```{r, CA_Solar_power}
+library(dplyr)
+
+ggplot() +
+  geom_sf(
+    data = US_counties_sf %>% 
+      filter(STATEFP == "06"),   
+    fill = "grey90",
+    color = "grey50"
+  ) +
+ geom_sf(
+  data = egrid2023_sf %>% 
+    filter(Plant.state.abbreviation == "CA"),
+  aes(color = Plant.primary.fuel.category),
+  size = 1
+) +
+
+  coord_sf(
+    xlim = c(-125, -113),
+  ylim = c(32, 42)   
+  ) +
+  labs(
+    title = "2018 Wind Electricity Plants - Washington",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
