@@ -100,7 +100,7 @@ str(egrid2023_sf)
 1. 2018 Electricity Plants Locations - Wind Power
 ```{r, Mainland USA, Wind Power}
 library(dplyr)
-
+library(ggplot2)
 ggplot() +
   geom_sf(data = US_counties_sf,
           fill = "grey90",
@@ -163,13 +163,14 @@ ggplot() +
     ylim = c(24, 50)
   ) +
   labs(
-    title = "2018 Wind Electricity Plants - Alaska",
+    title = "2018 Hydro Electricity Plants - Mainland USA",
     x = "Longitude",
     y = "Latitude"
   ) +
   my_theme
 
 ```
+
 ```{r, Alaska, hydro power}
 library(dplyr)
 
@@ -186,7 +187,7 @@ ggplot() +
     ylim = c(51, 72)
   ) +
   labs(
-    title = "2018 Wind Electricity Plants - Alaska",
+    title = "2018 Hydro Electricity Plants - Alaska",
     x = "Longitude",
     y = "Latitude"
   ) +
@@ -212,13 +213,14 @@ ggplot() +
     ylim = c(24, 50)
   ) +
   labs(
-    title = "2018 Wind Electricity Plants - Alaska",
+    title = "2018 Solar Electricity Plants - Mainland USA",
     x = "Longitude",
     y = "Latitude"
   ) +
   my_theme
 
 ```
+
 ```{r, Alaska, solar power}
 library(dplyr)
 
@@ -235,7 +237,7 @@ ggplot() +
     ylim = c(51, 72)
   ) +
   labs(
-    title = "2018 Wind Electricity Plants - Alaska",
+    title = "2018 Solar Electricity Plants - Alaska",
     x = "Longitude",
     y = "Latitude"
   ) +
@@ -260,13 +262,14 @@ ggplot() +
     ylim = c(24, 50)
   ) +
   labs(
-    title = "2023 Wind Electricity Plants - Alaska",
+    title = "2023 Wind Electricity Plants - Mainland USA",
     x = "Longitude",
     y = "Latitude"
   ) +
   my_theme
 
 ```
+
 ```{r, Alaska, wind power}
 library(dplyr)
 
@@ -308,13 +311,14 @@ ggplot() +
     ylim = c(24, 50)
   ) +
   labs(
-    title = "2023 Wind Electricity Plants - Alaska",
+    title = "2023 Hydro Electricity Plants - Mainland USA",
     x = "Longitude",
     y = "Latitude"
   ) +
   my_theme
 
 ```
+
 ```{r, Alaska, wind power}
 library(dplyr)
 
@@ -338,6 +342,7 @@ ggplot() +
   my_theme
 
 ```
+
 ```{r, Mainland USA, solar Power}
 library(dplyr)
 
@@ -354,7 +359,7 @@ ggplot() +
     ylim = c(24, 50)
   ) +
   labs(
-    title = "2023 Solar Electricity Plants - Alaska",
+    title = "2023 Solar Electricity Plants - Mainland USA",
     x = "Longitude",
     y = "Latitude"
   ) +
