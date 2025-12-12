@@ -145,6 +145,30 @@ ggplot() +
   my_theme
 
 ```
+
+
+```{r, Hawaii}
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2018_sf,
+          filter(Plant.primary.coal.oil.gas..other.fossil.fuel.category == "WIND"),
+          color = "saddlebrown",
+          size = 1) +
+  coord_sf(
+    xlim = c(-160.5, -154.5),
+    ylim = c(18.5, 22.5) 
+    ) +
+  labs(
+    title = "2018 Electricity Plants-Hawaii",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+```
+
+
 2. 2018 Electricity Plants Locations - hydro Power
 
 ```{r, Mainland USA, hydro Power}
