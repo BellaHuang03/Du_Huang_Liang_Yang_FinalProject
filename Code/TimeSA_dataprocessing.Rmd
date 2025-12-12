@@ -320,6 +320,9 @@ top5_states_by_year <- by_state_year %>%
   slice_max(order_by = total_capacity_MW, n = 5, with_ties = FALSE) %>%
   arrange(Data_Year_num, FuelUnified, desc(total_capacity_MW)) %>%
   ungroup()
+
+print(top5_states_by_year)
+
 ```
 
 Change the display of the tables
@@ -362,11 +365,101 @@ solar_table <- build_top5_table(by_state_year, "SOLAR", years, top_n)
 hydro_table  <- build_top5_table(by_state_year, "HYDRO",  years, top_n)
 ```
 
-a). Solar - CA
 ```{r}
+get_state_fuel_data <- function(df, state_abbrev, fuel_type) {
+  df %>%
+    filter(
+      FuelUnified == fuel_type,
+      `Plant state abbreviation` == state_abbrev,
+      !is.na(Data_Year_num)
+    ) %>%
+    group_by(Data_Year_num) %>%
+    summarise(
+      total_capacity_MW    = sum(cap_mw, na.rm = TRUE),
+      total_generation_MWh = sum(gen_mwh, na.rm = TRUE),
+      n_plants             = n_distinct(`Plant name`),
+      .groups = "drop"
+    )
+}
+
+solar_CA <- get_state_fuel_data(all_ts, "CA", "SOLAR")
+hydro_WA <- get_state_fuel_data(all_ts, "WA", "HYDRO")
+wind_TX  <- get_state_fuel_data(all_ts, "TX", "WIND")
+solar_AK <- get_state_fuel_data(all_ts, "AK", "SOLAR")
+
+```
+By state:
+1. Annual Capacity Trend (MW)
+```{r}
+plot_capacity_trend <- function(df, fuel, state) {
+  ggplot(df, aes(x = Data_Year_num, y = total_capacity_MW)) +
+    geom_line(linewidth = 1.3, color = "steelblue") +
+    geom_point(size = 3, color = "steelblue") +
+    geom_smooth(method = "lm", se = FALSE, linetype = "dashed") +
+    labs(
+      title = paste(fuel, "Capacity Additions in", state, "(2018–2023)"),
+      x = "Year",
+      y = "Total Nameplate Capacity (MW)"
+    ) +
+    theme_minimal(base_size = 14)
+}
+
+```
+By state:
+Annual Generation Trend (MWh)
+```{r}
+plot_generation_trend <- function(df, fuel, state) {
+  ggplot(df, aes(x = Data_Year_num, y = total_generation_MWh)) +
+    geom_line(linewidth = 1.3, color = "darkorange") +
+    geom_point(size = 3, color = "darkorange") +
+    geom_smooth(method = "lm", se = FALSE, linetype = "dashed") +
+    labs(
+      title = paste(fuel, "Generation in", state, "(2018–2023)"),
+      x = "Year",
+      y = "Total Generation (MWh)"
+    ) +
+    theme_minimal(base_size = 14)
+}
+
+```
+By state: Number of Plants Over Time
+```{r}
+plot_plant_count <- function(df, fuel, state) {
+  ggplot(df, aes(x = Data_Year_num, y = n_plants)) +
+    geom_line(linewidth = 1.3, color = "purple") +
+    geom_point(size = 3, color = "purple") +
+    geom_smooth(method = "lm", se = FALSE, linetype = "dashed") +
+    labs(
+      title = paste("Number of", fuel, "Plants in", state),
+      x = "Year",
+      y = "Number of Plants"
+    ) +
+    theme_minimal(base_size = 14)
+}
 
 ```
 
+a). Solar - CA
+```{r}
+plot_capacity_trend(solar_CA, "Solar", "CA")
+plot_generation_trend(solar_CA, "Solar", "CA")
+plot_plant_count(solar_CA, "Solar", "CA")
+```
 b). Hydro - WA
+```{r}
+plot_capacity_trend(hydro_WA, "Hydro", "WA")
+plot_generation_trend(hydro_WA, "Hydro", "WA")
+plot_plant_count(hydro_WA, "Hydro", "WA")
+```
 
 c). Wind - TX
+```{r}
+plot_capacity_trend(wind_TX, "Wind", "TX")
+plot_generation_trend(wind_TX, "Wind", "TX")
+plot_plant_count(wind_TX, "Wind", "TX")
+```
+Do early adopters have faster renewable expansion?
+early adopters 
+
+Measure expansion rates over time
+Compare the groups 
