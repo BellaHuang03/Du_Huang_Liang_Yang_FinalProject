@@ -237,7 +237,7 @@ ggplot(annual_totals, aes(x = Data_Year_num, y = total_capacity_MW, color = Fuel
 Is solar accelerating faster?
 Which is more volatile?
 
-```{statistical trend analysis for wind and solar, message = FALSE}
+```{r, message = FALSE}
 wind_trend <- lm(total_capacity_MW ~ Data_Year_num,
                  data = annual_totals %>% filter(FuelUnified == "WIND"))
 
@@ -463,3 +463,68 @@ early adopters
 
 Measure expansion rates over time
 Compare the groups 
+
+Explartory figures:
+1. Histograph, for capacity during the 6 years
+```{r}
+e_annual_totals <- all_ts %>%
+  filter(!is.na(FuelUnified)) %>%
+  group_by(Data_Year_num, FuelUnified) %>%
+  summarise(
+    total_capacity_MW = sum(cap_mw, na.rm = TRUE),
+    total_generation_MWh = sum(gen_mwh, na.rm = TRUE),
+    n_plants = n(),
+    .groups = "drop"
+  )
+
+library(ggplot2)
+library(dplyr)
+library(forcats)
+
+# Plot
+ggplot(e_annual_totals, 
+       aes(x = Data_Year_num, 
+           y = total_capacity_MW, 
+           fill = FuelUnified)) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
+  labs(
+    title = "Total Installed Capacity by Fuel Type and Year",
+    x = "Year",
+    y = "Total Capacity (MW)",
+    fill = "Fuel Type"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "right",
+    axis.title.x = element_text(margin = margin(t = 10)),
+    axis.title.y = element_text(margin = margin(r = 10))
+  )
+
+```
+2. regenerate the graph for only renewable energy
+```{r}
+renewables <- c("SOLAR", "WIND", "HYDRO", "GEOTHERMAL", "BIOMASS")
+
+renewable_totals <- e_annual_totals %>%
+  filter(FuelUnified %in% c("SOLAR", "WIND", "HYDRO", "GEOTHERMAL", "BIOMASS"))
+
+ggplot(renewable_totals,
+       aes(x = Data_Year_num,
+           y = total_capacity_MW,
+           fill = FuelUnified)) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
+  labs(
+    title = "Total Installed Renewable Capacity by Fuel Type",
+    x = "Year",
+    y = "Total Renewable Capacity (MW)",
+    fill = "Fuel Type"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "right",
+    axis.title.x = element_text(margin = margin(t = 10)),
+    axis.title.y = element_text(margin = margin(r = 10))
+  )
+
+```
+
