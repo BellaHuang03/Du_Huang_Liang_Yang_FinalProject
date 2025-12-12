@@ -249,6 +249,253 @@ summary(solar_trend)
 
 ```
 
+Linear regression test
+```{r}
+library(dplyr)
+library(broom)
+
+# Filter to the three technologies you plotted:
+techs <- c("HYDRO", "SOLAR", "WIND")
+
+trend_lm <- annual_totals %>%
+  filter(FuelUnified %in% techs) %>%
+  group_by(FuelUnified) %>%
+  do(tidy(lm(total_capacity_MW ~ Data_Year_num, data = .))) %>%
+  filter(term == "Data_Year_num")
+
+trend_lm
+
+```
+
+Mann–Kendall Non-parametric Trend Test
+```{r}
+library(Kendall)
+library(dplyr)
+
+techs <- c("HYDRO", "SOLAR", "WIND")
+
+mk_results <- annual_totals %>%
+  filter(FuelUnified %in% techs) %>%
+  group_by(FuelUnified) %>%
+  summarise(
+    mk = list(MannKendall(total_capacity_MW)),
+    tau = mk[[1]]$tau,
+    p_value = mk[[1]]$sl
+  )
+
+mk_results
+
+```
+
+Time series graph:
+```{r}
+# Packages
+library(dplyr)
+library(ggplot2)
+library(cowplot)   # for plot_grid
+
+# Function to produce two-panel trend plot for a fuel type
+two_panel_trend_plot <- function(tech_name,
+                                 df = annual_totals,
+                                 span = 0.6,
+                                 save = FALSE,
+                                 filename = NULL,
+                                 width = 10, height = 8, dpi = 300) {
+  # prepare data
+  dat <- df %>%
+    filter(FuelUnified == tech_name) %>%
+    arrange(Data_Year_num) %>%
+    mutate(
+      Year = as.integer(as.character(Data_Year_num))
+    )
+  
+  if (nrow(dat) < 3) stop("Need at least 3 years of data for: ", tech_name)
+  
+  # LOESS trend (use Year numeric)
+  lo <- loess(total_capacity_MW ~ Year, data = dat, span = span)
+  dat <- dat %>%
+    mutate(
+      trend_loess = predict(lo, newdata = Year),
+      residual = total_capacity_MW - trend_loess
+    )
+  
+  # Linear model on Year
+  lm_fit <- lm(total_capacity_MW ~ Year, data = dat)
+  lm_tidy <- broom::tidy(lm_fit)
+  lm_slope_row <- lm_tidy %>% filter(term == "Year")
+  slope_est <- lm_slope_row$estimate
+  slope_p   <- lm_slope_row$p.value
+  
+  # Mann-Kendall (non-parametric monotonic trend test)
+  mk <- Kendall::MannKendall(dat$total_capacity_MW)
+  tau_val <- as.numeric(mk$tau)
+  mk_p    <- as.numeric(mk$sl)
+  
+  # Top panel: raw series + LOESS + LM (dashed)
+  p_top <- ggplot(dat, aes(x = Year)) +
+    geom_col(aes(y = total_capacity_MW), fill = "grey90", width = 0.6) +
+    geom_point(aes(y = total_capacity_MW), size = 3, color = "#2b8cbe") +
+    geom_line(aes(y = total_capacity_MW), color = "#2b8cbe", size = 0.6, alpha = 0.6) +
+    geom_line(aes(y = trend_loess), color = "#225ea8", size = 1.1) +
+    geom_smooth(aes(y = total_capacity_MW), method = "lm", se = FALSE,
+                color = "black", linetype = "dashed", linewidth = 0.8) +
+    labs(
+      title = paste0(toupper(tech_name), " Capacity — Raw & Trend (", min(dat$Year), "–", max(dat$Year), ")"),
+      y = "Total Capacity (MW)",
+      x = NULL
+    ) +
+    theme_minimal(base_size = 14) +
+    theme(plot.title = element_text(size = 18, hjust = 0.5))
+  
+  # Bottom panel: residuals
+  p_bot <- ggplot(dat, aes(x = Year, y = residual)) +
+    geom_hline(yintercept = 0, linetype = "dashed", color = "grey50") +
+    geom_col(fill = "#fdae61", width = 0.6) +
+    labs(
+      title = "Remainder (Observed − LOESS trend)",
+      y = "Residual (MW)",
+      x = "Year"
+    ) +
+    theme_minimal(base_size = 13) +
+    theme(plot.title = element_text(size = 16, hjust = 0.5))
+  
+  # Compose combined plot (vertical)
+  combined <- plot_grid(p_top, p_bot, ncol = 1, rel_heights = c(2, 1))
+  
+  # Add a caption with stats using cowplot::ggdraw
+  caption_text <- sprintf(
+    "LM slope = %0.1f MW/year (p = %0.3g) • Mann–Kendall tau = %0.3f (p = %0.3g)",
+    slope_est, slope_p, tau_val, mk_p
+  )
+  final_plot <- ggdraw() +
+    draw_plot(combined, 0, 0.05, 1, 0.95) +
+    draw_label(caption_text, x = 0.5, y = 0.02, size = 10, hjust = 0.5)
+  
+  if (save) {
+    if (is.null(filename)) filename <- paste0(tolower(tech_name), "_trend_two_panel.png")
+    ggsave(filename, plot = final_plot, width = width, height = height, dpi = dpi)
+    message("Saved: ", filename)
+  }
+  
+  return(final_plot)
+}
+
+```
+
+```{r}
+two_panel_trend_plot("WIND")
+
+```
+Solar:
+```{r}
+two_panel_trend_plot("SOLAR")
+
+```
+Hydro
+```{r}
+two_panel_trend_plot("HYDRO")
+```
+
+Try 3 panel time series:
+```{r}
+three_panel_trend_plot <- function(tech_name,
+                                   df = annual_totals,
+                                   span = 0.6,
+                                   save = FALSE,
+                                   filename = NULL,
+                                   width = 9, height = 10, dpi = 300) {
+
+  # ---- prepare data ----
+  dat <- df %>%
+    filter(FuelUnified == tech_name) %>%
+    arrange(Data_Year_num) %>%
+    mutate(Year = as.integer(as.character(Data_Year_num)))
+  if (nrow(dat) < 3) stop("Need at least 3 years of data for: ", tech_name)
+
+  # ---- fit LOESS & residuals ----
+  lo <- loess(total_capacity_MW ~ Year, data = dat, span = span)
+  dat <- dat %>%
+    mutate(
+      trend_loess = predict(lo, newdata = Year),
+      residual = total_capacity_MW - trend_loess
+    )
+
+  # ---- linear model & Mann-Kendall ----
+  lm_fit <- lm(total_capacity_MW ~ Year, data = dat)
+  lm_sum <- broom::tidy(lm_fit)
+  slope_est <- lm_sum$estimate[lm_sum$term == "Year"]
+  slope_p   <- lm_sum$p.value[lm_sum$term == "Year"]
+
+  mk <- Kendall::MannKendall(dat$total_capacity_MW)
+  tau_val <- as.numeric(mk$tau); mk_p <- as.numeric(mk$sl)
+
+  # ---- Panel 1: Raw data ----
+  p1 <- ggplot(dat, aes(x = Year)) +
+    geom_col(aes(y = total_capacity_MW), fill = "grey92", width = 0.6) +
+    geom_point(aes(y = total_capacity_MW), size = 3, color = "#2b8cbe") +
+    geom_line(aes(y = total_capacity_MW), color = "#2b8cbe", size = 0.6, alpha = 0.7) +
+    labs(title = paste(toupper(tech_name), "- Raw Total Capacity"),
+         y = "Total Capacity (MW)", x = NULL) +
+    theme_minimal(base_size = 13) +
+    theme(plot.title = element_text(size = 16, hjust = 0.5))
+
+  # ---- Panel 2: Trend (LOESS) ----
+  p2 <- ggplot(dat, aes(x = Year)) +
+    geom_line(aes(y = trend_loess), color = "#225ea8", size = 1.4) +
+    geom_point(aes(y = trend_loess), color = "#225ea8", size = 2) +
+    geom_smooth(aes(y = total_capacity_MW), method = "lm", se = FALSE,
+                color = "black", linetype = "dashed", linewidth = 0.8) +
+    labs(title = "Estimated Trend (LOESS) + Linear Fit",
+         y = "Capacity (MW)", x = NULL) +
+    theme_minimal(base_size = 13) +
+    theme(plot.title = element_text(size = 16, hjust = 0.5))
+
+  # ---- Panel 3: Residuals ----
+  p3 <- ggplot(dat, aes(x = Year, y = residual)) +
+    geom_hline(yintercept = 0, linetype = "dashed", color = "grey50") +
+    geom_col(fill = "#fdae61", width = 0.6) +
+    labs(title = "Remainder (Observed - Trend)",
+         y = "Residual (MW)", x = "Year") +
+    theme_minimal(base_size = 13) +
+    theme(plot.title = element_text(size = 16, hjust = 0.5))
+
+  # ---- combine and caption ----
+  combined <- plot_grid(p1, p2, p3, ncol = 1, rel_heights = c(1, 1, 0.8))
+
+  caption_text <- sprintf(
+    "LM slope = %.1f MW/yr (p = %.3g) • Mann–Kendall tau = %.3f (p = %.3g)",
+    slope_est, slope_p, tau_val, mk_p
+  )
+
+  final <- ggdraw() +
+    draw_plot(combined, 0, 0.04, 1, 0.96) +
+    draw_label(caption_text, x = 0.5, y = 0.02, size = 10, hjust = 0.5)
+
+  if (save) {
+    if (is.null(filename)) filename <- paste0(tolower(tech_name), "_three_panel.png")
+    ggsave(filename, plot = final, width = width, height = height, dpi = dpi)
+    message("Saved: ", filename)
+  }
+
+  return(final)
+}
+```
+
+```{r}
+three_panel_trend_plot("WIND")
+```
+
+```{r}
+three_panel_trend_plot("SOLAR")
+```
+
+HYDRO
+```{r}
+three_panel_trend_plot("HYDRO")
+```
+
+
+
 6. Plot the trend for generation over 2018-2023 for wind, solar, and hydro
 ```{r, message = FALSE}
 library(ggplot2)
@@ -388,6 +635,8 @@ wind_TX  <- get_state_fuel_data(all_ts, "TX", "WIND")
 solar_AK <- get_state_fuel_data(all_ts, "AK", "SOLAR")
 
 ```
+
+Subsection 3:
 By state:
 1. Annual Capacity Trend (MW)
 ```{r}
@@ -459,7 +708,98 @@ plot_generation_trend(wind_TX, "Wind", "TX")
 plot_plant_count(wind_TX, "Wind", "TX")
 ```
 Do early adopters have faster renewable expansion?
-early adopters 
+early adopters: top states for each technology
+a). aggregate into a state–year–technology table
+```{r}
+library(tidyr) 
+state_year_tech <- by_state_year %>%
+  rename(State = `Plant state abbreviation`)
+
+state_year_tech_clean <- state_year_tech %>%
+  group_by(State, Data_Year_num, FuelUnified) %>%
+  summarise(
+    total_capacity_MW = sum(total_capacity_MW, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+state_year_wide <- state_year_tech_clean %>%
+  pivot_wider(
+    names_from = FuelUnified,
+    values_from = total_capacity_MW,
+    values_fill = 0,
+    names_glue = "{FuelUnified}_MW"
+  )
+
+```
+
+pull 2018 & 2023 data
+```{r}
+start_year <- 2018
+end_year <- 2023
+
+wide_2018_2023 <- state_year_wide %>%
+  filter(Data_Year_num %in% c(start_year, end_year)) %>%
+  pivot_wider(
+    id_cols = State,
+    names_from = Data_Year_num,
+    values_from = ends_with("_MW"),
+    names_glue = "{.value}_{Data_Year_num}"
+  )
+
+```
+Compute growth
+```{r}
+growth_df <- wide_2018_2023 %>%
+  mutate(
+    SOLAR_abs_growth = SOLAR_MW_2023 - SOLAR_MW_2018,
+    WIND_abs_growth  = WIND_MW_2023  - WIND_MW_2018,
+    HYDRO_abs_growth = HYDRO_MW_2023 - HYDRO_MW_2018
+  )
+```
+
+Regressions:
+```{r}
+lm(SOLAR_abs_growth ~ SOLAR_MW_2018, data = growth_df) %>% summary()
+lm(WIND_abs_growth  ~ WIND_MW_2018,  data = growth_df) %>% summary()
+lm(HYDRO_abs_growth ~ HYDRO_MW_2018, data = growth_df) %>% summary()
+
+```
+Summary table
+```{r}
+library(broom)
+library(dplyr)
+
+# Run regressions for each tech
+lm_solar <- lm(SOLAR_abs_growth ~ SOLAR_MW_2018, data = growth_df)
+lm_wind  <- lm(WIND_abs_growth  ~ WIND_MW_2018,  data = growth_df)
+lm_hydro <- lm(HYDRO_abs_growth ~ HYDRO_MW_2018, data = growth_df)
+#tidy 
+tidy_solar <- tidy(lm_solar)
+tidy_wind  <- tidy(lm_wind)
+tidy_hydro <- tidy(lm_hydro)
+
+# Helper function to extract slope row
+extract_slope <- function(tidy_df, tech_name, model_obj) {
+  slope_row <- tidy_df %>% filter(term != "(Intercept)")
+  
+  tibble(
+    Technology = tech_name,
+    Slope = slope_row$estimate,
+    Std_Error = slope_row$std.error,
+    p_value = slope_row$p.value,
+    R_squared = summary(model_obj)$r.squared
+  )
+}
+
+summary_table <- bind_rows(
+  extract_slope(tidy_solar, "Solar", lm_solar),
+  extract_slope(tidy_wind,  "Wind",  lm_wind),
+  extract_slope(tidy_hydro, "Hydro", lm_hydro)
+)
+
+summary_table
+```
+
 
 Measure expansion rates over time
 Compare the groups 
