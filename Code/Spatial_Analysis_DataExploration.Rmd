@@ -311,17 +311,42 @@ ggplot() +
 ... same format, do more if needed
 
 # 5. Map the pattern of number of unit/generator
-```{r}
-mapview(US_counties_sf,
-        col.regions = "gray90",
-        color = "gray50",
-        layer.name = "Counties") +
-  mapview(egrid2018_sf,
-          zcol = "Number.of.units",
-          col.regions = hcl.colors(30, "RdYlBu"),
-          at = seq(0, 70, by = 5),
-          cex = 3,              
-          alpha = 0.9,
-          layer.name = "Number of Generator")
+```{r, map the pattern for number of generator per state in map view}
+state_lookup <- tibble::tribble(
+  ~state_abbr, ~STATEFP,
+  "AL","01","AK","02","AZ","04","AR","05","CA","06","CO","08","CT","09",
+  "DE","10","DC","11","FL","12","GA","13","HI","15","ID","16","IL","17",
+  "IN","18","IA","19","KS","20","KY","21","LA","22","ME","23","MD","24",
+  "MA","25","MI","26","MN","27","MS","28","MO","29","MT","30","NE","31",
+  "NV","32","NH","33","NJ","34","NM","35","NY","36","NC","37","ND","38",
+  "OH","39","OK","40","OR","41","PA","42","RI","44","SC","45","SD","46",
+  "TN","47","TX","48","UT","49","VT","50","VA","51","WA","53","WV","54",
+  "WI","55","WY","56"
+)
+
+egrid2018_sf <- egrid2018_sf %>%
+  mutate(Plant.state.abbreviation = trimws(Plant.state.abbreviation)) %>%
+  left_join(state_lookup, by = c("Plant.state.abbreviation" = "state_abbr"))
+
+# 2) summarise to state totals 
+egrid2018_state_totals <- egrid2018_sf %>%
+  st_drop_geometry() %>%
+  group_by(STATEFP) %>%
+  summarise(
+    total_generators = sum(Number.of.units, na.rm = TRUE),
+    n_plants = n(),
+    .groups = "drop"
+  )
+
+# JOIN totals to a STATES shapefile that already has geometry
+US_states_joined <- US_counties_sf %>%
+  mutate(STATEFP = as.character(STATEFP)) %>%
+  left_join(egrid2018_state_totals, by = "STATEFP")
+
+# mapview state polygons colored by total generators
+mapview(US_states_joined,
+        zcol = "total_generators",
+        col.regions = hcl.colors(30, "RdYlBu"),
+        layer.name = "Total generators (state)")
 ```
 
