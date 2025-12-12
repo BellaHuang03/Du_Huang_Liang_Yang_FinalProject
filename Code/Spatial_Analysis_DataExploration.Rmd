@@ -26,7 +26,8 @@ library(zoo)
 library(RColorBrewer)
 library(sf)
 library(leaflet)
-library(mapview); mapviewOptions(fgb = FALSE)
+library(mapview); mapviewOptions(fgb = FALSE); mapviewOptions(basemaps = "CartoDB.Positron")
+
 
 # Set your ggplot theme
 my_theme <- theme_minimal() +
@@ -262,7 +263,7 @@ ggplot() +
           aes(color = Plant.primary.coal.oil.gas..other.fossil.fuel.category),
           size  = 0.6,
           alpha = 0.8) +
-  coord_sf(xlim = c(-160.5, -154.5), ylim = c(51, 72)) +
+  coord_sf(xlim = c(-179, -130), ylim = c(51, 72)) + 
   scale_color_brewer(
     palette = "Paired", 
     name    = "Primary fuel type"
@@ -316,8 +317,10 @@ mapview(US_counties_sf,
         color = "gray50",
         layer.name = "Counties") +
   mapview(egrid2018_sf,
-          zcol = "Number.of.units", 
-          cex = 4,              
+          zcol = "Number.of.units",
+          col.regions = hcl.colors(30, "RdYlBu"),
+          at = seq(0, 70, by = 5),
+          cex = 3,              
           alpha = 0.9,
           layer.name = "Number of Generator")
 ```
