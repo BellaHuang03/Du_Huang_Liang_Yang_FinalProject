@@ -76,31 +76,62 @@ ts2023 <- read.csv(here("Data/Raw/egrid_Data/time_series/ts2023.csv"), stringsAs
 
 
 # Rationale and Research Questions
-Which states have seen the fastest growth in renewable energy capacity?
-Does early adoption predict faster renewable expansion?
-Is renewable growth spatially clustered (e.g., wind in Midwest, solar in Southwest)?
+
+The U.S. energy system is undergoing a major structural shift as renewable energy, particularly wind and solar, continues to expand across the country. According to the U.S. Energy Information Administration (EIA), renewable energy sources accounted for about 21 percent of total U.S. utility-scale electricity generation in 2023, and that share continues to grow as wind, solar, and other renewables expand their role in the energy mix (EIA, 2024). Although natural gas and petroleum remain the dominant energy sources, the rapid expansion of wind and solar has become one of the most important trends shaping the nation’s electricity mix.  This study highlights the regions driving the transition and shows how quickly renewable technologies are reshaping the U.S. electricity system by examining where and when new capacity has been added, using national wind and solar capacity data from 2018–2023 to analyze these trends.
+
+Understanding how renewable capacity is changing spatially and temporally is essential for assessing the pace of the U.S. energy transition. Facility-level datasets from the EIA Form 860 and the EPA’s eGRID provide detailed information on generator technology, capacity (MW), location, and in-service dates, which can be used for analyzing both annual growth patterns and geographic distribution of renewable development.  
+
+## Research questions
+
+1. Which U.S. states have experienced the fastest growth in renewable energy capacity from 2018 to 2023, and how does this growth vary by technology?
+
+2. Is renewable energy capacity growth spatially clustered across the United States, and do different technologies exhibit distinct geographic patterns of expansion?
+
+3. Does early adoption predict faster renewable expansion?
 
 
 \newpage
 
 # Dataset Information
-From this project, we plan to use the PLNT(Plant) tab from U.S. Environmental Protection Agency's eGRID datasets from 2018 to 2023. The PLNT tab in eGRID provides plant-level information of electricity generation and capacity across the United States, including spatial information, fuel-specific energy contributions, and capacity information. Because each plant record also includes spatial identifiers such as county code and latitute/longitude, this dataset is perfect for linking generation and capacity measures to spatial patterns across regions.
 
+## Data Source and Collection
+
+This analysis uses data from the Emissions & Generation Resource Integrated Database (eGRID) published by the U.S. Environmental Protection Agency (EPA) for the years 2018–2023. The datasets were obtained from the EPA eGRID archive as a series of Microsoft Excel files corresponding to each reporting year. eGRID compiles electricity generation and capacity data reported annually by U.S. power plants to the U.S. Energy Information Administration (EIA), primarily through EIA Forms 860 and 923, into a standardized national database.
+To support spatial analysis, this study also incorporates the 2018 Cartographic Boundary File for U.S. counties and county-equivalent units produced by the U.S. Census Bureau. This polygon shapefile provides generalized county boundaries for the entire United States and its territories and is intended for small-scale thematic mapping. The dataset reflects administrative boundaries as of January 1, 2018, is referenced to NAD83, and was used as a spatial framework for aggregating and visualizing plant-level eGRID data.
+
+## Data Content and Structure
+
+Each eGRID Excel file contains multiple worksheets, including unit-level, generator-level, plant-level, and state-level tables. This study uses the plant-level (PLNT) table, which provides plant-level information of electricity generation and capacity across the United States, including spatial information, fuel-specific energy contributions, and capacity information. Because each plant record also includes spatial identifiers such as county code and latitude/longitude, this dataset is perfect for linking generation and capacity measures to spatial patterns across regions.
+
+Key variables extracted for analysis include reporting year, plant location, fuel or technology classification, installed capacity (MW), and net generation (MWh). Fuel and technology classifications were used to identify renewable energy facilities, with a focus on wind, solar, and hydroelectric power. Installed capacity represents the maximum rated output of a plant, while net generation reflects actual electricity produced during each reporting year, enabling both spatial and temporal analysis of renewable energy patterns.
+
+## Data Wrangling and Preparation
+
+Due to the large size of the raw eGRID files, initial data preparation was performed in Excel prior to analysis in R. Plant-level tables for each year (2018–2023) were converted to CSV format, and only variables required for the analytical objectives were retained due to limited storage on GitHub. To support different analytical goals, two processed versions of the dataset were created and stored in the repository (Data/Raw):
+
+- Time-series dataset: retained columns related to reporting year, fuel or technology category, capacity, generation, and other temporal attributes.
+
+- Spatial dataset: retained plant location and geographic identifiers, including state, latitude, longitude, plant identifiers, and renewable classification.
+
+Unused variables were removed to reduce file size and accommodate repository storage constraints. Missing values were assessed, particularly in coordinate and fuel-type fields, and records lacking essential information were excluded from aggregation. Data were subsequently summarized by fuel type and location to support both temporal trend analysis and spatial visualization. 
 
 \newpage
 
 # Exploratory Analysis 
 
-Spatial Exploratory Analysis
+## Spatial Exploratory Analysis
 
-1. Explore all US counties.
+### 1. Explore all US counties.
 
-```{r, counties shapefile, echo=FALSE, message=FALSE}
+```{r, counties shapefile, echo=FALSE, message=FALSE, fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 # Read in all US counties shapefile into an sf dataframe
 US_counties_sf <- read_sf(here("Data/Spatial/cb_2018_us_county_20m.shp")) 
-st_crs(US_counties_sf)
+# st_crs(US_counties_sf)
 mapview(US_counties_sf)
 ```
+
+Figure 1. Interactive Map. County boundaries of the United States displayed from a county-level shapefile. The map allows zooming and panning to explore spatial variation in county size and distribution. Data source: U.S. Census Bureau TIGER/Line Shapefiles
+
 
 ```{r, convert df to sf, echo=FALSE, include=FALSE}
 egrid2018_sf <- egrid2018 %>%
@@ -117,11 +148,9 @@ egrid2023_sf <- egrid2023 %>%
   st_as_sf(coords = c('Plant.longitude', 'Plant.latitude'), crs = 4269, remove = FALSE)
 ```
 
-3. 2018 Electricity Plants Locations
+### 2. 2018 Electricity Plants Locations
 
-Mainland USA
-
-```{r, Mainland USA Locations, echo=FALSE, message=FALSE}
+```{r, Mainland USA Locations, echo=FALSE, message=FALSE, fig.cap="Figure 2. Locations of electricity generating plants in the contiguous United States in 2018. Power plants are shown as blue points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 ggplot() +
   geom_sf(data = US_counties_sf,
           fill = "grey90",
@@ -134,16 +163,15 @@ ggplot() +
     ylim = c(24, 50)
     ) +
   labs(
-    title = "2018 Electricity Plants-Mainland USA",
+    title = "2018 Electricity Plant Locations-Mainland USA",
     x = "Longitude",
     y = "Latitude"
   ) +
   my_theme
 ```
 
-Alaska
 
-```{r, Alaska Locations, echo=FALSE, message=FALSE}
+```{r, Alaska Locations, echo=FALSE, message=FALSE, fig.cap="Figure 3. Locations of electricity generating plants in Alaska, United States in 2018. Power plants are shown as blue points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 ggplot() +
   geom_sf(data = US_counties_sf,
           fill = "grey90",
@@ -163,9 +191,8 @@ ggplot() +
   my_theme
 ```
 
-Hawaii
 
-```{r, Hawaii Locations, echo=FALSE, message=FALSE}
+```{r, Hawaii Locations, echo=FALSE, message=FALSE, echo=FALSE, message=FALSE, fig.cap="Figure 4. Locations of electricity generating plants in Hawaii, United States in 2018. Power plants are shown as blue points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 ggplot() +
   geom_sf(data = US_counties_sf,
           fill = "grey90",
@@ -185,8 +212,9 @@ ggplot() +
   my_theme
 ```
 
-4. Catogorized Electricity Plant Type
-```{r, Mainland USA Fuel Types, echo=FALSE, message=FALSE}
+### 3. Catogorized Electricity Plant Type
+
+```{r, Mainland USA Fuel Types, echo=FALSE, message=FALSE, fig.cap="Figure 5. Locations of electricity generating plants in the contiguous United States in 2018, categorized by primary fuel type. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 ggplot() +
   geom_sf(data = US_counties_sf,
           fill  = "grey90",
@@ -213,7 +241,7 @@ ggplot() +
 
 ```
 
-```{r, Alaska Fuel Types, echo=FALSE, message=FALSE}
+```{r, Alaska Fuel Types, echo=FALSE, message=FALSE, fig.cap="Figure 6. Locations of electricity generating plants in Alaksa, USA in 2018, categorized by primary fuel type. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 ggplot() +
   geom_sf(data = US_counties_sf,
           fill  = "grey90",
@@ -240,7 +268,7 @@ ggplot() +
 
 ```
 
-```{r, Hawaii Fuel Types, echo=FALSE, message=FALSE}
+```{r, Hawaii Fuel Types, echo=FALSE, message=FALSE, fig.cap="Figure 7. Locations of electricity generating plants in Hawaii, USA in 2018, categorized by primary fuel type. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 ggplot() +
   geom_sf(data = US_counties_sf,
           fill  = "grey90",
@@ -267,21 +295,49 @@ ggplot() +
 
 ```
 
-5. Map the pattern of number of unit/generator
+### 4. Map the pattern of total generator per state
 
-```{r}
-mapview(US_counties_sf,
-        col.regions = "gray90",
-        color = "gray50",
-        layer.name = "Counties") +
-  mapview(egrid2018_sf,
-          zcol = "Number.of.units",
-          col.regions = hcl.colors(30, "RdYlBu"),
-          at = seq(0, 70, by = 5),
-          cex = 3,              
-          alpha = 0.9,
-          layer.name = "Number of Generator")
+```{r, pattern of total generator/state, echo=FALSE, message=FALSE, warning=FALSE, fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+
+state_lookup <- tibble::tribble(
+  ~state_abbr, ~STATEFP,
+  "AL","01","AK","02","AZ","04","AR","05","CA","06","CO","08","CT","09",
+  "DE","10","DC","11","FL","12","GA","13","HI","15","ID","16","IL","17",
+  "IN","18","IA","19","KS","20","KY","21","LA","22","ME","23","MD","24",
+  "MA","25","MI","26","MN","27","MS","28","MO","29","MT","30","NE","31",
+  "NV","32","NH","33","NJ","34","NM","35","NY","36","NC","37","ND","38",
+  "OH","39","OK","40","OR","41","PA","42","RI","44","SC","45","SD","46",
+  "TN","47","TX","48","UT","49","VT","50","VA","51","WA","53","WV","54",
+  "WI","55","WY","56"
+)
+
+egrid2018_sf <- egrid2018_sf %>%
+  mutate(Plant.state.abbreviation = trimws(Plant.state.abbreviation)) %>%
+  left_join(state_lookup, by = c("Plant.state.abbreviation" = "state_abbr"))
+
+# 2) summarise to state totals 
+egrid2018_state_totals <- egrid2018_sf %>%
+  st_drop_geometry() %>%
+  group_by(STATEFP) %>%
+  summarise(
+    total_generators = sum(Number.of.units, na.rm = TRUE),
+    n_plants = n(),
+    .groups = "drop"
+  )
+
+# JOIN totals to a STATES shapefile that already has geometry
+US_states_joined <- US_counties_sf %>%
+  mutate(STATEFP = as.character(STATEFP)) %>%
+  left_join(egrid2018_state_totals, by = "STATEFP")
+
+# mapview state polygons colored by total generators
+mapview(US_states_joined,
+        zcol = "total_generators",
+        col.regions = hcl.colors(30, "RdYlBu"),
+        layer.name = "Total generators (state)")
 ```
+
+Figure 8. Interactive Map. Total number of electricity generators by state in the United States (2018). Generator totals are aggregated from plant-level data and visualized using a color gradient. Data sources: EPA eGRID (2018); U.S. Census Bureau TIGER/Line Shapefiles.
 
 \newpage
 
