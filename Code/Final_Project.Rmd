@@ -472,7 +472,7 @@ p2 <- ggplot(annual_totals, aes(x = Data_Year_num, y = total_generation_MWh, col
 cowplot::plot_grid(p1, p2, ncol = 1, align = "hv")
 ```
 
-Graph 2  shows how electricity generation from wind, solar, and hydroelectric sources has changed from 2018 to 2023. During this period, solar generation increased the most, reflecting the rapid growth in installed solar capacity and improvements in system efficiency. Wind generation continued to rise as well, though at a steadier pace, building on its already large share of renewable output. In contrast, hydroelectric generation remained fairly stable over these years, which aligns with the limited expansion of hydro infrastructure and the fact that hydro output is more strongly influenced by long-term facility operations and water availability than by new capacity additions.
+Graph 2  shows how electricity generation from wind, solar, and hydroelectric sources has changed from 2018 to 2023. During this period, solar generation increased the most, reflecting the rapid growth in installed solar capacity and improvements in system efficiency. Wind generation continued to rise as well, though at a steadier pace, very likely resulting from its already large share of renewable output(). In contrast, hydroelectric generation remained fairly stable over these years, which aligns with the limited expansion of hydro infrastructure and the fact that hydro output is more strongly influenced by long-term facility operations and water availability than by new capacity additions.
 
 ### 2. Statistical analysis
 ```{r, echo=FALSE, message=FALSE, tab.cap="Table 1. Trend in Installed Nameplate Capacity (2018–2023)"}
@@ -498,7 +498,7 @@ trend_lm %>%
   ) %>%
   kable_styling(full_width = TRUE)
 ```
-The results from Table 1 show that solar capacity increased the fastest, growing by approximately 12.7 gigawatts per year, while wind followed closely at about 10.8 gigawatts per year. Both of these trends are statistically significant, indicating strong and consistent national expansion for solar and wind over the study period. In contrast, hydroelectric capacity shows a small but statistically significant decline of about 435 megawatts per year, reflecting the limited opportunities for new hydropower development and the gradual reduction or aging of existing facilities. 
+The results from Table 1 show that solar capacity increased the fastest, growing by approximately 12.7 gigawatts per year. And then, wind followed closely with a growth rate at about 10.8 gigawatts per year. Both of these trends are statistically significant with p-values smaller than 0.05, indicating strong and consistent national expansion for solar and wind over the study period. In contrast, hydroelectric capacity shows a small but statistically significant decline of about 435 megawatts per year, reflecting the limited opportunities for new hydropower development and the gradual reduction or aging of existing facilities. 
 
 ## Subsection 2: How have capacity levels changed for each technology? Do different technologies exhibit distinct geographic patterns of expansion?
 
@@ -1023,7 +1023,10 @@ mk_results %>%
 
 ```
 
-The Mann–Kendall results presented in Table 2 reveal clear differences in long-term capacity trends across renewable technologies of Hydro, Solar, and Wind. Solar and wind both exhibit strong positive monotonic trends, with Kendall’s τ equal to 1.00 and statistically significant p-values (p = 0.0085), indicating there is a consistent increasing trend in installed capacity. In contrast, hydroelectric capacity shows a modest negative τ value (τ = –0.467), but its p-value (p = 0.2597) is not statistically significant, suggesting that there is not any statistically meaningful long-term trend. All together, solar and wind experienced clear and significant upward growth during this period, while hydroelectric capacity remained essentially stable due to geographic and infrastructural constraints.
+Null hypothesis (H₀): The installed capacity shows no monotonic trend over time (τ = 0).
+Alternative hypothesis (H₁): The installed capacity follows a significant monotonic trend over time (τ ≠ 0).
+The Mann–Kendall results presented in Table 2 showed that there are clear differences in long-term capacity trends between renewable technologies of Hydro, Solar, and Wind. Solar and wind both exhibit strong positive monotonic trends as they strongly rejects the null hypothesis with Kendall’s τ equal to 1.00 and statistically significant p-values (p = 0.0085). Thus, there is a consistent increasing trend in installed capacity. 
+On the other hand, the test result for hydroelectric capacity fails to reject the null hypothesis, with only a modest negative τ value (τ = –0.467). What’s more, its p-value (p = 0.2597>0.1) is not statistically significant, suggesting that there is not any statistically meaningful long-term trend. 
 
 ##Subsection 3: Which states contribute most to renewable capacity growth?
 ### 1. Spatial presentation
@@ -1121,7 +1124,7 @@ ggplot() +
 
 ```
 
-### 2. 
+### 2. State Zoom-in
 ```{r, echo=FALSE, message=FALSE, tab.cap="Table 3. Top Five States in Solar Capacity Additions (2018–2023)", tab.align="center", tab.width=12, tab.height=6.5, out.width="100%"}
 # 1. Filter to the three technologies and valid rows
 techs <- c("WIND", "SOLAR", "HYDRO")
@@ -1211,7 +1214,7 @@ Hydroelectric capacity, on the other hand, remains almost entirely dominated by 
 Wind capacity growth is concentrated in the central United States. As shown in Table 5, Texas leads wind capacity additions by a wide margin every year, maintaining its position as the largest wind-producing state in the U.S. Iowa and Oklahoma remain strong contributors, holding the second and third positions throughout the period. Kansas and California round out the top five, with Illinois entering the ranking from 2020 onward. These trends support the hypothesis that wind energy development is anchored in states with large available land areas, consistent wind resources, and established transmission networks.
 
 To better understand the drivers underlying the national trends, we examine states that are dominant contributors within each technology segment. Texas, Washington, and California provide particularly informative examples because each state plays an outsized role in one major renewable technology and exhibits a characteristic deployment profile:
-#12. prepare for state-year table
+
 ```{r}
 get_state_fuel_data <- function(df, state_abbrev, fuel_type) {
   df %>%
@@ -1235,7 +1238,7 @@ wind_TX  <- get_state_fuel_data(all_ts, "TX", "WIND")
 solar_AK <- get_state_fuel_data(all_ts, "AK", "SOLAR")
 
 ```
-#Subsection 3: By state: 1. Annual Capacity Trend (MW)
+By state 1:  Annual Capacity Trend (MW)
 ```{r}
 plot_capacity_trend <- function(df, fuel, state) {
   ggplot(df, aes(x = Data_Year_num, y = total_capacity_MW)) +
@@ -1251,7 +1254,7 @@ plot_capacity_trend <- function(df, fuel, state) {
 }
 
 ```
-#By state：Annual Generation Trend (MWh)
+By state 2: Annual Generation Trend (MWh)
 ```{r}
 plot_generation_trend <- function(df, fuel, state) {
   ggplot(df, aes(x = Data_Year_num, y = total_generation_MWh)) +
@@ -1267,7 +1270,7 @@ plot_generation_trend <- function(df, fuel, state) {
 }
 
 ```
-#By state: Number of Plants Over Time
+By state 3: Number of Plants Over Time
 ```{r}
 plot_plant_count <- function(df, fuel, state) {
   ggplot(df, aes(x = Data_Year_num, y = n_plants)) +
