@@ -584,7 +584,7 @@ ggplot() +
 
 ```
 
-```{r, Mainland USA, Wind Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 18. 2023 Wind Power Plants - Mainland USA. Power plants are shown as brown points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+```{r, Mainland USA, Wind Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 12. 2023 Wind Power Plants - Mainland USA. Power plants are shown as brown points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 library(dplyr)
 
 ggplot() +
@@ -608,7 +608,7 @@ ggplot() +
 
 ```
 
-```{r, Alaska, Wind Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 19. 2023 Wind Power Plants - Alaska. Power plants are shown as brown points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+```{r, Alaska, Wind Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 13. 2023 Wind Power Plants - Alaska. Power plants are shown as brown points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 library(dplyr)
 
 ggplot() +
@@ -632,7 +632,7 @@ ggplot() +
 
 ```
 
-```{r, Hawaii, Wind Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 20. 2023 Wind Power Plants - Hawaii. Power plants are shown as brown points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+```{r, Hawaii, Wind Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 14. 2023 Wind Power Plants - Hawaii. Power plants are shown as brown points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 library(dplyr)
 
 ggplot() +
@@ -663,10 +663,10 @@ ggplot() +
 
 ```
 
-The contrasting distribution of wind electricity plants between the mainland United States and Alaska is driven largely by differences in wind resource quality and underlying geography. The mainland map shows dense clusters of wind facilities across the Great Plains and upper Midwest: regions characterized by flat terrain and some of the most consistent, high-quality onshore wind resources in the world. These geographic and atmospheric conditions create an expansive “wind belt” extending from Texas through the Dakotas, making large-scale wind farm development both feasible and economically attractive (U.S. Department of Agriculture, 2022). In contrast, Alaska’s harsh climate and highly variable wind regimes limit where turbines can be reliably sited. Although strong winds exist along coastal and mountainous areas, much of Alaska’s landscape faces environmental and operational constraints such as icing, extreme cold, and limited accessible flat land (U.S. Department of Energy, 2021). As a result, wind development in Alaska remains sparse and localized, while the mainland supports widespread utility-scale installations. 
+The contrasting distribution of wind power plants between the mainland USA, Alaska, and Hawaii is driven largely by differences in wind resource quality and geography. From figure 9 - 14, it is clear to see that the mainland map shows dense clusters of wind facilities across the Great Plains and upper Midwest: regions characterized by flat terrain and some of the most consistent, high-quality onshore wind resources in the world. These natural conditions create an expansive “wind belt” extending from Texas through the Dakotas, which makes large-scale wind farm development both feasible and economically attractive (U.S. Department of Agriculture, 2022). In contrast, Alaska’s harsh climate limits the possible sites for building turbines. Although there are strong winds along coastal and mountainous areas, much of Alaska’s landscape faces environmental constraints like icing and limited accessible flat land (U.S. Department of Energy, 2021). Wind power plants in Hawaii are few and are concentrated on several major islands where consistent trade winds and suitable locations support wind generation. As a result, wind development in Alaska and Hawaii remains sparse and localized, while the mainland supports more widespread wind power plant installations. Comparing the 2018 (Figure 9-11) and 2023 (Figure 12-14) maps, wind power growth appears to build on existing patterns. In the mainland USA, wind plants remain concentrated in the Great Plains and Texas area, with a noticeable increase in density by 2023. In contrast, Alaska and Hawaii show little change over time, which means ongoing geographic and infrastructure limits on wind expansion in these states are still present.
 
 #### Hydro Power
-```{r, Mainland USA, Hydro Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 12. 2018 Hydro Power Plants - Mainland USA. Power plants are shown as dark blue points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+```{r, Mainland USA, Hydro Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 15. 2018 Hydro Power Plants - Mainland USA. Power plants are shown as dark blue points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 library(dplyr)
 
 ggplot() +
@@ -690,7 +690,7 @@ ggplot() +
 
 ```
 
-```{r, Alaska, Hydro Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 13. 2018 Hydro Power Plants - Alaska. Power plants are shown as dark blue points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+```{r, Alaska, Hydro Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 16. 2018 Hydro Power Plants - Alaska. Power plants are shown as dark blue points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 library(dplyr)
 
 ggplot() +
@@ -714,7 +714,7 @@ ggplot() +
 
 ```
 
-```{r, Hawaii, Hydro Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 14. 2018 Hydro Power Plants - Hawaii. Power plants are shown as dark blue points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+```{r, Hawaii, Hydro Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 17. 2018 Hydro Power Plants - Hawaii. Power plants are shown as dark blue points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 library(dplyr)
 
 ggplot() +
@@ -745,7 +745,7 @@ ggplot() +
 
 ```
 
-```{r, Mainland USA, Hydro Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 21. 2023 Hydro Power Plants - Mainland USA. Power plants are shown as dark blue points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+```{r, Mainland USA, Hydro Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 18. 2023 Hydro Power Plants - Mainland USA. Power plants are shown as dark blue points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 library(dplyr)
 
 ggplot() +
@@ -769,7 +769,7 @@ ggplot() +
 
 ```
 
-```{r, Alaska, Hydro Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 22. 2023 Hydro Power Plants - Alaska. Power plants are shown as dark blue points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+```{r, Alaska, Hydro Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 19. 2023 Hydro Power Plants - Alaska. Power plants are shown as dark blue points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 library(dplyr)
 
 ggplot() +
@@ -793,7 +793,7 @@ ggplot() +
 
 ```
 
-```{r, Hawaii, Hydro Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 23. 2023 Hydro Power Plants - Hawaii. Power plants are shown as dark blue points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+```{r, Hawaii, Hydro Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 20. 2023 Hydro Power Plants - Hawaii. Power plants are shown as dark blue points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 library(dplyr)
 
 ggplot() +
@@ -824,10 +824,10 @@ ggplot() +
 
 ```
 
-Hydroelectric plant distribution in the mainland U.S. and Alaska is shaped primarily by geography and hydrological conditions. In the mainland, hydro facilities cluster in the Pacific Northwest, the Sierra Nevada, and parts of the Appalachians—regions with steep terrain, major river systems, and abundant water flow that make large-scale hydropower feasible (U.S. Department of Energy, 1998). In contrast, Alaska’s hydro plants are concentrated along the southeastern coastline, where heavy rainfall and mountainous topography create ideal small- to medium-scale hydro sites. Much of Alaska’s interior lacks sufficient river gradients or water volume, limiting hydropower development. 
+Hydroelectric plant distribution in the mainland U.S. and Alaska is shaped primarily by geography and hydrological conditions (figure 15-20). In the mainland, hydro facilities cluster in the Pacific Northwest, the Sierra Nevada, and parts of the Appalachians: regions with steep terrain, major river systems, and abundant water flow that make large-scale hydropower feasible (U.S. Department of Energy, 1998). In contrast, Alaska’s hydro plants are concentrated along the southeastern coastline, where heavy rainfall and mountains create ideal small- to medium-scale hydro sites. Much of Alaska’s interior lacks sufficient river gradients or water volume, limiting hydropower development. The same goes for Hawaii. With limited access to large rivers, hydro power plants are not a popular choice in both Hawaii and Alaska. Compared with 2018 (figure 15-17), the 2023 (figure 18-20) hydro power map shows very little change in overall spatial distribution across the mainland United States. Hydroelectric plants remain concentrated in the same water-rich regions, particularly the Pacific Northwest, California, and parts of the Northeast and Appalachians. This can be explained by the unique characteristics of hydro power. Currently, all suitable locations in the United States capable of hosting hydropower projects have already been developed for hydroelectric generation, so there has been no significant change over the past five years. 
 
 #### Solar Power
-```{r, Mainland USA, Solar Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 15. 2018 Solar Power Plants - Mainland USA. Power plants are shown as orange points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+```{r, Mainland USA, Solar Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 21. 2018 Solar Power Plants - Mainland USA. Power plants are shown as orange points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 library(dplyr)
 
 ggplot() +
@@ -851,7 +851,7 @@ ggplot() +
 
 ```
 
-```{r, Alaska, Solar Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 16. 2018 Solar Power Plants - Alaska. Power plants are shown as orange points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+```{r, Alaska, Solar Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 22. 2018 Solar Power Plants - Alaska. Power plants are shown as orange points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 library(dplyr)
 
 ggplot() +
@@ -875,7 +875,7 @@ ggplot() +
 
 ```
 
-```{r, Hawaii, Solar Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 17. 2018 Solar Power Plants - Mainland USA. Power plants are shown as orange points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+```{r, Hawaii, Solar Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 23. 2018 Solar Power Plants - Mainland USA. Power plants are shown as orange points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 library(dplyr)
 
 ggplot() +
@@ -985,7 +985,7 @@ ggplot() +
 
 ```
 
-The distribution of solar electricity plants in the mainland United States reflects the strong relationship between solar development and solar resource availability, climate, and land suitability. In the mainland U.S. map, solar facilities are heavily concentrated in the Southwest, including California, Arizona, Nevada, New Mexico, and Texas—regions with some of the highest solar irradiance in the country and large areas of open land well suited for utility-scale solar farms. Additional clusters appear in the Southeast and Mid-Atlantic, where supportive policies and growing energy demand have encouraged solar expansion despite slightly lower sunlight levels (National Renewable Energy Laboratory. 2018). In contrast, Alaska has no utility-scale solar plants in 2018, largely because the state receives far fewer hours of sunlight, especially in winter, and experiences long periods of low solar angle and cloudiness. These geographic and climatic constraints make Alaska unsuitable for large-scale solar development. However, there is one solar panel spotted in Alaska in 2023. 
+The distribution of solar electricity plants in the mainland United States reflects the strong relationship between solar development and solar resource availability and climate. In the mainland U.S. map (figure 21), solar facilities are heavily concentrated in the Southwest, including California, Arizona, Nevada, New Mexico, and Texas: regions with some of the highest solar irradiance in the country and large areas of open land well suited for solar farms. Additional clusters appear in the Southeast and Mid-Atlantic, where supportive policies and growing energy demand have encouraged solar expansion despite slightly lower sunlight levels (National Renewable Energy Laboratory. 2018). In contrast, Alaska has no utility-scale solar plants in 2018, largely because the state receives far fewer hours of sunlight, especially in winter, and experiences long periods of low solar angle and cloudiness. Compared to 2018, the 2023 (figure 24) solar power map shows clear and widespread growth across the mainland United States. Solar plants are no longer concentrated mainly in the Southwest and California; instead, there is much denser development in the Southeast, Texas, and parts of the Midwest and Northeast. Also, there is one solar panel spotted in Alaska in 2023 (figure 26). Comparing the 2018 (figure 23) and 2023 (figure 26) solar maps for Hawaii shows gradual steady growth. Solar plants remain concentrated on the main islands, particularly Oʻahu and Maui, with more installations on the figure 26. Surprisingly, in 2023, Alaska gained its first solar power plant in the state, symbolizing the beginning of a new phase in renewable energy development (figure 25).
 
 ### 2. Statistical and Time Series Analysis
 
@@ -1028,32 +1028,34 @@ Alternative hypothesis (H₁): The installed capacity follows a significant mono
 The Mann–Kendall results presented in Table 2 showed that there are clear differences in long-term capacity trends between renewable technologies of Hydro, Solar, and Wind. Solar and wind both exhibit strong positive monotonic trends as they strongly rejects the null hypothesis with Kendall’s τ equal to 1.00 and statistically significant p-values (p = 0.0085). Thus, there is a consistent increasing trend in installed capacity. 
 On the other hand, the test result for hydroelectric capacity fails to reject the null hypothesis, with only a modest negative τ value (τ = –0.467). What’s more, its p-value (p = 0.2597>0.1) is not statistically significant, suggesting that there is not any statistically meaningful long-term trend. 
 
-##Subsection 3: Which states contribute most to renewable capacity growth?
+## Subsection 3: Which states contribute most to renewable capacity growth?
+
 ### 1. Spatial presentation
 To complement the national and technology-wide trends, we next examine how renewable energy development is distributed across U.S. states. The deployment of solar, wind, and hydro capacity is far from uniform; instead, each technology exhibits a distinct geographical concentration shaped by resource availability, market conditions, and policy frameworks. Identifying the top-producing states allows us to understand where each technology has taken hold and how leadership positions have evolved over time. The Top 5 rankings for 2018–2023 reveal clear and persistent patterns: California dominates solar, Washington remains the center of U.S. hydropower, and Texas consistently leads wind development by a substantial margin. These states not only anchor their respective technologies but also influence national trends through their scale, investment activity, and infrastructure advantages. Building on these rankings, the following sections explore each leading state in greater depth, analyzing how capacity additions, generation trends, and plant expansion patterns unfold within their dominant technology sectors.
 
-```{r, TX, echo=FALSE, message=FALSE, fig.cap="Figure 27. Spatial Distribution of Texas Power Plants by Primary Fuel Type, 2023. Power plants are shown as colorful points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+```{r, CA, echo=FALSE, message=FALSE, fig.cap="Figure 27. Spatial Distribution of California Power Plants by Primary Fuel Type, 2023. Power plants are shown as colorful points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 library(dplyr)
 
 ggplot() +
   geom_sf(
     data = US_counties_sf %>% 
-      filter(STATEFP == "48"),   
+      filter(STATEFP == "06"),   
     fill = "grey90",
     color = "grey50"
   ) +
-  geom_sf(
-    data = egrid2023_sf %>% 
-      filter(Plant.state.abbreviation == "TX"),
-    aes(color = Plant.primary.fuel.category),
-    size = 1
-  ) +
+ geom_sf(
+  data = egrid2023_sf %>% 
+    filter(Plant.state.abbreviation == "CA"),
+  aes(color = Plant.primary.fuel.category),
+  size = 1
+) +
+
   coord_sf(
-    xlim = c(-107, -92),   
-    ylim = c(25, 37)
+    xlim = c(-125, -113),
+  ylim = c(32, 42)   
   ) +
   labs(
-    title = "Spatial Distribution of Texas Power Plants by Primary Fuel Type, 2023",
+    title = "Spatial Distribution of California Power Plants by Primary Fuel Type, 2023",
     x = "Longitude",
     y = "Latitude",
     color = "Fuel Type"
@@ -1093,29 +1095,28 @@ ggplot() +
 
 ```
 
-```{r, CA, echo=FALSE, message=FALSE, fig.cap="Figure 29. Spatial Distribution of California Power Plants by Primary Fuel Type, 2023. Power plants are shown as colorful points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+```{r, TX, echo=FALSE, message=FALSE, fig.cap="Figure 29. Spatial Distribution of Texas Power Plants by Primary Fuel Type, 2023. Power plants are shown as colorful points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 library(dplyr)
 
 ggplot() +
   geom_sf(
     data = US_counties_sf %>% 
-      filter(STATEFP == "06"),   
+      filter(STATEFP == "48"),   
     fill = "grey90",
     color = "grey50"
   ) +
- geom_sf(
-  data = egrid2023_sf %>% 
-    filter(Plant.state.abbreviation == "CA"),
-  aes(color = Plant.primary.fuel.category),
-  size = 1
-) +
-
+  geom_sf(
+    data = egrid2023_sf %>% 
+      filter(Plant.state.abbreviation == "TX"),
+    aes(color = Plant.primary.fuel.category),
+    size = 1
+  ) +
   coord_sf(
-    xlim = c(-125, -113),
-  ylim = c(32, 42)   
+    xlim = c(-107, -92),   
+    ylim = c(25, 37)
   ) +
   labs(
-    title = "2018 Wind Power Plants - Washington",
+    title = "Spatial Distribution of Texas Power Plants by Primary Fuel Type, 2023",
     x = "Longitude",
     y = "Latitude",
     color = "Fuel Type"
@@ -1123,6 +1124,7 @@ ggplot() +
   my_theme
 
 ```
+
 
 ### 2. State Zoom-in
 ```{r, echo=FALSE, message=FALSE, tab.cap="Table 3. Top Five States in Solar Capacity Additions (2018–2023)", tab.align="center", tab.width=12, tab.height=6.5, out.width="100%"}
@@ -1209,13 +1211,15 @@ pretty_table(wind_table,
 
 Tables 3–5 summarize the top five states contributing to wind, solar, and hydroelectric capacity additions from 2018 to 2023. The preceding national‐level analysis demonstrates that renewable energy expansion in the United States is highly heterogeneous across technologies and regions. While wind, solar, and hydro each show distinct national trajectories—characterized respectively by rapid expansion, sustained acceleration, and long-term stagnation—these aggregate patterns mask substantial state-level variation in how and where growth is occurring. Technologies develop unevenly across the country because their deployment depends on local resource availability, state policy, infrastructure constraints, and market conditions.
 
-For solar capacity, California consistently ranks first every year, reflecting the state’s long-standing policy incentives and strong solar resource potential (Table 3). North Carolina and Arizona follow closely, though their ranking shifts slightly over time. To be noticed, Texas rises into the top three by 2020, indicating that the state is also having a rapid solar deployment in recent years.
-Hydroelectric capacity, on the other hand, remains almost entirely dominated by Pacific Northwest and East Coast states (Table 4). Washington is the top hydro state across all six years, with California, Oregon, and New York consistently filling the next three positions. The stability of these rankings proves that hydropower is strongly dependent on established infrastructures and geographic constraints, with relatively few new installations occurring within the study period.
-Wind capacity growth is concentrated in the central United States. As shown in Table 5, Texas leads wind capacity additions by a wide margin every year, maintaining its position as the largest wind-producing state in the U.S. Iowa and Oklahoma remain strong contributors, holding the second and third positions throughout the period. Kansas and California round out the top five, with Illinois entering the ranking from 2020 onward. These trends support the hypothesis that wind energy development is anchored in states with large available land areas, consistent wind resources, and established transmission networks.
+For solar capacity, California consistently ranks first every year, reflecting the state’s long-standing policy incentives and strong solar resource potential (Table 3). North Carolina and Arizona follow closely, though their ranking shifts slightly over time. To be noticed, Texas rises into the top three by 2020, indicating that the state is also having a rapid solar deployment in recent years. The map (figure 27) also proves this point. Solar power dominates the map, with especially dense clusters across Southern California and the Central Valley. 
+
+Hydroelectric capacity, on the other hand, remains almost entirely dominated by Pacific Northwest and East Coast states (Table 2). Washington is the top hydro state across all six years, with California, Oregon, and New York consistently filling the next three positions. The stability of these rankings proves that hydropower is strongly dependent on established infrastructures and geographic constraints, with relatively few new installations occurring within the study period. The map (figure 28) shows a similar pattern. Hydropower clearly dominates Washington’s electricity landscape, with dense clusters of hydro plants spread across the state, particularly along major river systems. 
+
+Wind capacity growth is concentrated in the central United States. As shown in Table 3, Texas leads wind capacity additions by a wide margin every year, maintaining its position as the largest wind-producing state in the U.S. Iowa and Oklahoma remain strong contributors, holding the second and third positions throughout the period. Kansas and California round out the top five, with Illinois entering the ranking from 2020 onward. These trends support the hypothesis that wind energy development is anchored in states with large available land areas, consistent wind resources, and established transmission networks. In figure 29, Wind power stands out as a dominant feature in Texas, with dense clusters of wind plants concentrated in the Panhandle, West Texas, and central regions. 
 
 To better understand the drivers underlying the national trends, we examine states that are dominant contributors within each technology segment. Texas, Washington, and California provide particularly informative examples because each state plays an outsized role in one major renewable technology and exhibits a characteristic deployment profile:
 
-```{r}
+```{r, echo=FALSE, message=FALSE}
 get_state_fuel_data <- function(df, state_abbrev, fuel_type) {
   df %>%
     filter(
@@ -1239,7 +1243,7 @@ solar_AK <- get_state_fuel_data(all_ts, "AK", "SOLAR")
 
 ```
 By state 1:  Annual Capacity Trend (MW)
-```{r}
+```{r, echo=FALSE, message=FALSE}
 plot_capacity_trend <- function(df, fuel, state) {
   ggplot(df, aes(x = Data_Year_num, y = total_capacity_MW)) +
     geom_line(linewidth = 1.3, color = "steelblue") +
@@ -1255,7 +1259,7 @@ plot_capacity_trend <- function(df, fuel, state) {
 
 ```
 By state 2: Annual Generation Trend (MWh)
-```{r}
+```{r, echo=FALSE, message=FALSE}
 plot_generation_trend <- function(df, fuel, state) {
   ggplot(df, aes(x = Data_Year_num, y = total_generation_MWh)) +
     geom_line(linewidth = 1.3, color = "darkorange") +
@@ -1271,7 +1275,7 @@ plot_generation_trend <- function(df, fuel, state) {
 
 ```
 By state 3: Number of Plants Over Time
-```{r}
+```{r, echo=FALSE, message=FALSE}
 plot_plant_count <- function(df, fuel, state) {
   ggplot(df, aes(x = Data_Year_num, y = n_plants)) +
     geom_line(linewidth = 1.3, color = "purple") +
@@ -1287,7 +1291,7 @@ plot_plant_count <- function(df, fuel, state) {
 
 ```
 ### 3a. Wind
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 three_panel_trend_plot <- function(tech_name,
                                    df = annual_totals,
                                    span = 0.6,
@@ -1371,82 +1375,82 @@ three_panel_trend_plot <- function(tech_name,
 }
 ```
 Across the results graph of the Texas Wind total wind generation, installed wind capacity and number of wind plants, Texas shows a consistent and accelerated growth over the 2018-2023 period. The wind number of wind plants in Texas increased steadily from around 160 plants in 2018 to over 210 by 2023. This reflects a robust pipeline of new project development and repowering efforts. Growth exceeds the linear trend in most years, indicating particularly strong expansion in 2019- 2022. With the increase of the number of wind plants, the Wind capacity rose from roughly 24-25 GW in 2018 to over 40 GW in 2023, leading to a increase of around 65% of previous number. With the growth trajectory aligned with and even exceed the linear trend, the result suggested a continued investment in larger and more efficient wind farms. Capacity additions accelerated around 2021 and 2022, consistent with the timing of  federal tax incentives and completion of major transmission upgrades such CREZ corridors, promoting utility- scale wind development and to ensure adequate transmission to bring the new power into the state’s grid. Wind generation in Texas grew substantially faster than capacity, climbing from 75-80 TWh in 2018 to more than 115 TWh in 2023, reflecting a improvement in turbine efficiency, a higher average capacity factors, a reduced curtailment due to expanded transmission. 
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
 plot_capacity_trend(wind_TX, "Wind", "TX")
 ```
-Figure . Annual installed Wind capacity in Texas from 2018 to 2023.
+Figure 30. Annual installed Wind capacity in Texas from 2018 to 2023.
 The solid line represents observed total nameplate capacity, while the dashed line shows a fitted linear trend. The figure illustrates year-to-year changes in infrastructure expansion and highlights the overall direction and magnitude of long-term growth.
 
 
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 plot_generation_trend(wind_TX, "Wind", "TX")
 ```
-Figure . Annual  Wind Generation in Texas from 2018 to 2023.
+Figure 31 . Annual  Wind Generation in Texas from 2018 to 2023.
 The solid line represents observed total generation, while the dashed line shows a fitted linear trend. The figure illustrates year-to-year changes in infrastructure expansion and highlights the overall direction and magnitude of long-term growth.
 
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 plot_plant_count(wind_TX, "Wind", "TX")
 ```
-Figure . Annual number of Wind plants in Texas from 2018 to 2023.
+Figure 32. Annual number of Wind plants in Texas from 2018 to 2023.
 The solid line shows observed plant counts, while the dashed linear trend highlights the long-term direction of development. This figure illustrates how facility expansion (or contraction) unfolded over time and whether growth patterns align with overall capacity and generation trends.
 
 
-```{r, echo=FALSE, message=FALSE, fig.cap="Graph 3. Three-Panel Trend Analysis of U.S. Wind Capacity (2018–2023). The panels show raw annual capacity values, LOESS-estimated trends with linear fits, and residual structure. Trend statistics (LM slope and Mann–Kendall τ) are displayed in the footer."}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Graph 3. Three-Panel Trend Analysis of U.S. Wind Capacity (2018–2023). The panels show raw annual capacity values, LOESS-estimated trends with linear fits, and residual structure. Trend statistics (LM slope and Mann–Kendall τ) are displayed in the footer."}
 three_panel_trend_plot("WIND")
 ```
 The wind capacity data show a statistically significant increase from 2018 to 2023, with no declines across the period. Both the LOESS trend line and the linear fit indicate a clear upward trajectory, and the statistical tests confirm this pattern. The linear model estimates an average increase of about 10.8 GW per year (p = 0.000171), and the Mann–Kendall test also detects a significant monotonic trend (τ = 1.00, p = 0.0085). The residuals are minimal, indicating that the trend model fits well. 
 
 ### 3b. Solar
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 three_panel_trend_plot("SOLAR")
 ```
 Solar capacity shows a steady and substantial increase from 2018 to 2023. Both the LOESS trend and the linear fit indicate a strong upward trajectory, and the statistical tests confirm this pattern. The linear model estimates an average increase of about 12.7 GW per year (p = 0.000362), and the Mann–Kendall test identifies a significant monotonic upward trend (τ = 1.00, p = 0.0085). The residuals are minimal, suggesting the trend model fits well. Overall, solar capacity grew rapidly and consistently during this period.
 
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 plot_capacity_trend(solar_CA, "Solar", "CA")
 ```
-Figure . Annual installed Solar capacity in California from 2018 to 2023.
+Figure 33. Annual installed Solar capacity in California from 2018 to 2023.
 The solid line represents observed total nameplate capacity, while the dashed line shows a fitted linear trend. The figure illustrates year-to-year changes in infrastructure expansion and highlights the overall direction and magnitude of long-term growth.
 
 
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 plot_generation_trend(solar_CA, "Solar", "CA")
 ```
-Figure . Annual installed Solar Generation in California from 2018 to 2023.
+Figure 34. Annual installed Solar Generation in California from 2018 to 2023.
 The solid line represents observed total Generation, while the dashed line shows a fitted linear trend. The figure illustrates year-to-year changes in infrastructure expansion and highlights the overall direction and magnitude of long-term growth.
 
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 plot_plant_count(solar_CA, "Solar", "CA")
 ```
-Figure . Annual number of Solar plants in California from 2018 to 2023.
+Figure 35. Annual number of Solar plants in California from 2018 to 2023.
 The solid line shows observed plant counts, while the dashed linear trend highlights the long-term direction of development. This figure illustrates how facility expansion (or contraction) unfolded over time and whether growth patterns align with overall capacity and generation trends.
 
 
 ### 3c. Hydro
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 three_panel_trend_plot("HYDRO")
 ```
 Hydro capacity remains mostly stable from 2018 to 2023, with slight year-to-year fluctuations but no clear upward trend. The linear model suggests a small annual decline of about 435 MW per year (p = 0.041), but the Mann–Kendall test does not detect a significant monotonic trend (τ = −0.467, p = 0.26). The discrepancy reflects minor variability rather than a strong directional shift. Overall, hydro capacity appears essentially flat over the study period, with no meaningful long-term increase or decrease.
 
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 plot_capacity_trend(hydro_WA, "Hydro", "WA")
 ```
-Figure . Annual installed Hydro capacity in Washington from 2018 to 2023.
+Figure 36. Annual installed Hydro capacity in Washington from 2018 to 2023.
 The solid line represents observed total nameplate capacity, while the dashed line shows a fitted linear trend. The figure illustrates year-to-year changes in infrastructure expansion and highlights the overall direction and magnitude of long-term growth.
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 plot_generation_trend(hydro_WA, "Hydro", "WA")
 ```
-Figure . Annual installed Hydro Generation in Washington from 2018 to 2023.
+Figure 37. Annual installed Hydro Generation in Washington from 2018 to 2023.
 The solid line represents observed total Generation, while the dashed line shows a fitted linear trend. The figure illustrates year-to-year changes in infrastructure expansion and highlights the overall direction and magnitude of long-term growth.
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 plot_plant_count(hydro_WA, "Hydro", "WA")
 ```
-Figure . Annual number of Hydro plants in Washington from 2018 to 2023.
+Figure 38. Annual number of Hydro plants in Washington from 2018 to 2023.
 The solid line shows observed plant counts, while the dashed linear trend highlights the long-term direction of development. This figure illustrates how facility expansion (or contraction) unfolded over time and whether growth patterns align with overall capacity and generation trends.
 
 ### 4. Do early adopters have faster renewable expansion?
-```{r, , echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 state_year_tech <- by_state_year %>%
   rename(State = `Plant state abbreviation`)
 
@@ -1490,7 +1494,7 @@ lm(WIND_abs_growth  ~ WIND_MW_2018,  data = growth_df) %>% summary()
 lm(HYDRO_abs_growth ~ HYDRO_MW_2018, data = growth_df) %>% summary()
 ```
 
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # Run regressions for each tech
 lm_solar <- lm(SOLAR_abs_growth ~ SOLAR_MW_2018, data = growth_df)
 lm_wind  <- lm(WIND_abs_growth  ~ WIND_MW_2018,  data = growth_df)
@@ -1543,7 +1547,7 @@ summary_table <- bind_rows(
 summary_table %>%
   kable(
     format = "html",
-    caption = "Table X. Summary of state-level regressions: absolute capacity growth (2018–2023) regressed on baseline (2018) capacity.",
+    caption = "Table 6. Summary of state-level regressions: absolute capacity growth (2018–2023) regressed on baseline (2018) capacity.",
     align = "c"
   ) %>%
   kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE) %>%
@@ -1560,19 +1564,43 @@ The regression results show strong evidence of momentum effects for both solar a
 \newpage
 
 # Summary and Conclusions
-Final Summary and Conclusions
 
-This study examined spatial and temporal patterns of renewable energy development in the United States from 2018 to 2023, using plant-level data from the EPA’s eGRID database and associated geographic datasets. By integrating time-series trends, spatial distributions, statistical modeling, and state-level comparisons, the analysis provides a comprehensive view of how wind, solar, and hydroelectric technologies have evolved in recent years and how these patterns relate to broader questions about regional leadership, spatial clustering, and early-adopter momentum.
+This study examined spatial and temporal patterns of renewable energy development in the United States from 2018 to 2023 using plant-level data from the EPA’s eGRID database and associated geographic datasets. By integrating time-series trends, spatial analysis, statistical modeling, and cross-state comparisons, the analysis characterizes recent development of wind, solar, and hydropower. It also examines which regions are leading the energy transition, the spatial distribution characteristics of technology clusters, and how early adoption has shaped today's energy landscape.
 
-Across the national system, two technologies—solar and wind—show clear and statistically significant growth, while hydropower remains largely unchanged. Solar capacity increased at the fastest rate, expanding by approximately 12.7 GW per year, followed by wind at 10.8 GW per year, with both trends supported by strong linear and Mann–Kendall results. Hydroelectric capacity, in contrast, showed no meaningful expansion and instead exhibited a slight long-term decline of roughly 435 MW per year, consistent with its geographic and infrastructural constraints. Generation patterns further amplify these distinctions: wind and solar both display increasing annual production that aligns with capacity growth, while hydroelectric generation fluctuates sharply from year to year, driven primarily by hydrologic variability rather than new development.
 
-Spatial analyses reveal that renewable expansion is highly geographically concentrated. Solar growth remains anchored in the Southwest and Southeast; wind continues to expand across the Great Plains and Texas; and hydroelectric facilities remain clustered in the Pacific Northwest and the Northeast. The Top-5 state rankings confirm stable technological “cores”: California for solar, Washington for hydropower, and Texas for wind. These states maintain their leadership positions throughout the study period, reflecting not only their resource advantages but also supportive policy environments and pre-existing infrastructure. Visualization of 2018 vs. 2023 spatial patterns further indicates that new renewable installations tend to reinforce existing geographic clusters rather than expand into new regions.
+Solar and wind exhibit clear, statistically significant growth over the study period, while hydroelectric capacity remains essentially stable. Solar expanded at the fastest rate, increasing by approximately 12.7 GW per year, followed by wind at 10.8 GW per year, and both supported by strong linear and Mann–Kendall results. Hydroelectric capacity showed no meaningful expansion and instead a modest long-term decline of roughly 435 MW per year, reflecting geographic, infrastructural, and regulatory constraints. Generation trends align with these patterns: wind and solar production increased steadily alongside capacity growth, whereas hydroelectric generation fluctuated substantially due to hydrologic variability and infrastructural constraints.
+Spatial analyses reveal that renewable expansion is highly spatially concentrated. Solar growth is most pronounced in the Southwest and Southeast, while wind development remains concentrated across the Great Plains and Texas. Hydroelectric facilities remain clustered in the Pacific Northwest and Northeast, with no evidence of spatial expansion. Comparisons between 2018 and 2023 indicate that new installations primarily reinforce existing geographic clusters rather than establish new ones.
+Early adoption strongly predicts continued growth for solar and wind technologies. States that began with strong solar or wind portfolios in 2018 tended to experience the fastest increases through 2023. This relationship does not extend to hydropower, where expansion is limited.
+State-level case studies highlight the technology-specific drivers propelling these trends. California consistently leads solar development, Texas dominates wind capacity and generation, and Washington remains the center of U.S. hydropower. These leadership positions remain stable throughout the study period, which reflects long-standing resource advantages, policy support, and pre-existing infrastructure. Case studies illustrate technology-specific drivers, including Texas’s transmission investments, such as the CREZ system, Washington’s structurally fixed hydroelectric system, and California’s policy-driven solar expansion.
+Overall, the U.S. renewable energy landscape from 2018 to 2023 is characterized by technological divergence, persistent spatial clustering, and path-dependent growth. Solar and wind continue to expand rapidly within established regional cores, while hydropower remains largely static. States that were leaders at the start of the study period—most notably California, Texas, and Washington—continue to dominate their respective technologies, reinforcing regional specialization in the U.S. energy transition.
 
-State-level case studies underscore the technology-specific drivers of these trends. Texas wind demonstrates rapid and consistent growth in plant count, capacity, and generation, supported by superior wind resources, large land availability, and major transmission investments such as the CREZ system. Washington hydro remains structurally stable, with no new facility development and year-to-year generation fluctuations strongly linked to drought cycles and snowpack variability. California solar continues to grow rapidly in both number of installations and installed capacity, driven by policy incentives, rooftop solar programs, and high solar irradiance, though generation grows slightly more slowly due to increasing curtailment and grid congestion. These cases illustrate how geographic, policy, and infrastructural factors shape technology-specific growth pathways.
-
-Overall, the analysis demonstrates that the U.S. renewable energy landscape is characterized by strong technological divergence, persistent spatial clustering, and momentum effects favoring early adopters. Solar and wind show accelerating, geographically concentrated growth driven by resource potential and sustained investment, while hydropower remains stable due to physical and regulatory constraints. States that were already leaders in 2018—California, Texas, and Washington—continued to dominate their respective technologies, reinforcing regional specialization in the renewable energy sector. These results highlight not only the progress of the U.S. energy transition but also the structural patterns that will continue to shape renewable deployment in the coming decade.
 \newpage
 
 # References
+1. U.S. Energy Information Administration (EIA). 2024. “What Is U.S. Electricity Generation by Energy Source?” https://www.eia.gov/tools/faqs/faq.php?id=427&t=3
 
-\<add references here if relevant, otherwise delete this section\>
+2. Solar Energy in the Arctic: A Case Study of Northwest Alaska.
+
+3. Electricity Generation from Renewables in the United States: Resource Potential, Current Usage, Technical Status, Challenges, Strategies, Policies, and Future Directions.
+
+4. U.S. Department of Energy. 2023. Hydropower Market Reports 2023. Office of Energy Efficiency & Renewable Energy.
+
+5. Our World in Data. n.d. “Renewable Energy.” https://ourworldindata.org/renewable-energy
+
+6. U.S. Department of Agriculture, Economic Research Service. 2022. “Wind Power Development Has Grown Rapidly in the Central and Midwest Regions of the United States.” Charts of Note. https://ers.usda.gov/data-products/charts-of-note/chart-detail/?chartId=109244
+
+7. U.S. Department of Energy, Office of Energy Efficiency and Renewable Energy. 2021. “Distributed Wind Energy Brings Value to Remote and Rural Communities.” https://www.energy.gov/eere/wind/articles/distributed-wind-energy-brings-value-remote-and-rural-communities
+
+8. U.S. Department of Energy. 1998. “Hydropower Resource Assessment and Characterization.” Office of Energy Efficiency & Renewable Energy. https://www1.eere.energy.gov/does-water-10430
+
+9. National Renewable Energy Laboratory (NREL). n.d. “United States Solar Resource Maps.” https://www.nrel.gov/gis/solar-resource-maps.html
+
+10. Baker Institute for Public Policy. n.d. Texas CREZ Lines: How Stakeholders Shape Major Energy Infrastructure Projects. https://www.bakerinstitute.org/research/texas-crez-lines-how-stakeholders-shape-major-energy-infrastructure-projects
+
+11. University of Florida, Warrington College of Business. n.d. “What Is Curtailment? An Electricity Market Expert Explains.” https://warrington.ufl.edu/news/what-is-curtailment-an-electricity-market-expert-explains/
+
+12. California Energy Commission. 2024. Scaling Solar for Small and Medium Commercial Buildings. https://www.energy.ca.gov/publications/2024/scaling-solar-small-and-medium-commercial-buildings
+
+13. U.S. Energy Information Administration (EIA). 2023. “Today in Energy: Growth of Renewable Electricity in the United States.” https://www.eia.gov/todayinenergy/detail.php?id=60341
+
+14. U.S. Energy Information Administration. 2024. What Is U.S. Electricity Generation by Energy Source? https://www.eia.gov/tools/faqs/faq.php?id=427&t=3
