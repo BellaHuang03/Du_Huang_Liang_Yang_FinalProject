@@ -1369,13 +1369,27 @@ three_panel_trend_plot <- function(tech_name,
 
   return(final)
 }
+```
+Across the results graph of the Texas Wind total wind generation, installed wind capacity and number of wind plants, Texas shows a consistent and accelerated growth over the 2018-2023 period. The wind number of wind plants in Texas increased steadily from around 160 plants in 2018 to over 210 by 2023. This reflects a robust pipeline of new project development and repowering efforts. Growth exceeds the linear trend in most years, indicating particularly strong expansion in 2019- 2022. With the increase of the number of wind plants, the Wind capacity rose from roughly 24-25 GW in 2018 to over 40 GW in 2023, leading to a increase of around 65% of previous number. With the growth trajectory aligned with and even exceed the linear trend, the result suggested a continued investment in larger and more efficient wind farms. Capacity additions accelerated around 2021 and 2022, consistent with the timing of  federal tax incentives and completion of major transmission upgrades such CREZ corridors, promoting utility- scale wind development and to ensure adequate transmission to bring the new power into the state’s grid. Wind generation in Texas grew substantially faster than capacity, climbing from 75-80 TWh in 2018 to more than 115 TWh in 2023, reflecting a improvement in turbine efficiency, a higher average capacity factors, a reduced curtailment due to expanded transmission. 
+```{r, echo=FALSE, message=FALSE}
 
 plot_capacity_trend(wind_TX, "Wind", "TX")
+```
+Figure . Annual installed Wind capacity in Texas from 2018 to 2023.
+The solid line represents observed total nameplate capacity, while the dashed line shows a fitted linear trend. The figure illustrates year-to-year changes in infrastructure expansion and highlights the overall direction and magnitude of long-term growth.
+
+
+```{r, echo=FALSE, message=FALSE}
 plot_generation_trend(wind_TX, "Wind", "TX")
+```
+Figure . Annual  Wind Generation in Texas from 2018 to 2023.
+The solid line represents observed total generation, while the dashed line shows a fitted linear trend. The figure illustrates year-to-year changes in infrastructure expansion and highlights the overall direction and magnitude of long-term growth.
+
+```{r, echo=FALSE, message=FALSE}
 plot_plant_count(wind_TX, "Wind", "TX")
 ```
-
-Across the results graph of the Texas Wind total wind generation, installed wind capacity and number of wind plants, Texas shows a consistent and accelerated growth over the 2018-2023 period. The wind number of wind plants in Texas increased steadily from around 160 plants in 2018 to over 210 by 2023. This reflects a robust pipeline of new project development and repowering efforts. Growth exceeds the linear trend in most years, indicating particularly strong expansion in 2019- 2022. With the increase of the number of wind plants, the Wind capacity rose from roughly 24-25 GW in 2018 to over 40 GW in 2023, leading to a increase of around 65% of previous number. With the growth trajectory aligned with and even exceed the linear trend, the result suggested a continued investment in larger and more efficient wind farms. Capacity additions accelerated around 2021 and 2022, consistent with the timing of  federal tax incentives and completion of major transmission upgrades such CREZ corridors, promoting utility- scale wind development and to ensure adequate transmission to bring the new power into the state’s grid. Wind generation in Texas grew substantially faster than capacity, climbing from 75-80 TWh in 2018 to more than 115 TWh in 2023, reflecting a improvement in turbine efficiency, a higher average capacity factors, a reduced curtailment due to expanded transmission. 
+Figure . Annual number of Wind plants in Texas from 2018 to 2023.
+The solid line shows observed plant counts, while the dashed linear trend highlights the long-term direction of development. This figure illustrates how facility expansion (or contraction) unfolded over time and whether growth patterns align with overall capacity and generation trends.
 
 
 ```{r, echo=FALSE, message=FALSE, fig.cap="Graph 3. Three-Panel Trend Analysis of U.S. Wind Capacity (2018–2023). The panels show raw annual capacity values, LOESS-estimated trends with linear fits, and residual structure. Trend statistics (LM slope and Mann–Kendall τ) are displayed in the footer."}
@@ -1386,24 +1400,50 @@ The wind capacity data show a statistically significant increase from 2018 to 20
 ### 3b. Solar
 ```{r}
 three_panel_trend_plot("SOLAR")
-
-plot_capacity_trend(solar_CA, "Solar", "CA")
-plot_generation_trend(solar_CA, "Solar", "CA")
-plot_plant_count(solar_CA, "Solar", "CA")
-
 ```
 Solar capacity shows a steady and substantial increase from 2018 to 2023. Both the LOESS trend and the linear fit indicate a strong upward trajectory, and the statistical tests confirm this pattern. The linear model estimates an average increase of about 12.7 GW per year (p = 0.000362), and the Mann–Kendall test identifies a significant monotonic upward trend (τ = 1.00, p = 0.0085). The residuals are minimal, suggesting the trend model fits well. Overall, solar capacity grew rapidly and consistently during this period.
+
+```{r, echo=FALSE, message=FALSE}
+plot_capacity_trend(solar_CA, "Solar", "CA")
+```
+Figure . Annual installed Solar capacity in California from 2018 to 2023.
+The solid line represents observed total nameplate capacity, while the dashed line shows a fitted linear trend. The figure illustrates year-to-year changes in infrastructure expansion and highlights the overall direction and magnitude of long-term growth.
+
+
+```{r, echo=FALSE, message=FALSE}
+plot_generation_trend(solar_CA, "Solar", "CA")
+```
+Figure . Annual installed Solar Generation in California from 2018 to 2023.
+The solid line represents observed total Generation, while the dashed line shows a fitted linear trend. The figure illustrates year-to-year changes in infrastructure expansion and highlights the overall direction and magnitude of long-term growth.
+
+```{r, echo=FALSE, message=FALSE}
+plot_plant_count(solar_CA, "Solar", "CA")
+```
+Figure . Annual number of Solar plants in California from 2018 to 2023.
+The solid line shows observed plant counts, while the dashed linear trend highlights the long-term direction of development. This figure illustrates how facility expansion (or contraction) unfolded over time and whether growth patterns align with overall capacity and generation trends.
+
 
 ### 3c. Hydro
 ```{r}
 three_panel_trend_plot("HYDRO")
-
-plot_capacity_trend(hydro_WA, "Hydro", "WA")
-plot_generation_trend(hydro_WA, "Hydro", "WA")
-plot_plant_count(hydro_WA, "Hydro", "WA")
-
 ```
 Hydro capacity remains mostly stable from 2018 to 2023, with slight year-to-year fluctuations but no clear upward trend. The linear model suggests a small annual decline of about 435 MW per year (p = 0.041), but the Mann–Kendall test does not detect a significant monotonic trend (τ = −0.467, p = 0.26). The discrepancy reflects minor variability rather than a strong directional shift. Overall, hydro capacity appears essentially flat over the study period, with no meaningful long-term increase or decrease.
+
+```{r, echo=FALSE, message=FALSE}
+plot_capacity_trend(hydro_WA, "Hydro", "WA")
+```
+Figure . Annual installed Hydro capacity in Washington from 2018 to 2023.
+The solid line represents observed total nameplate capacity, while the dashed line shows a fitted linear trend. The figure illustrates year-to-year changes in infrastructure expansion and highlights the overall direction and magnitude of long-term growth.
+```{r, echo=FALSE, message=FALSE}
+plot_generation_trend(hydro_WA, "Hydro", "WA")
+```
+Figure . Annual installed Hydro Generation in Washington from 2018 to 2023.
+The solid line represents observed total Generation, while the dashed line shows a fitted linear trend. The figure illustrates year-to-year changes in infrastructure expansion and highlights the overall direction and magnitude of long-term growth.
+```{r, echo=FALSE, message=FALSE}
+plot_plant_count(hydro_WA, "Hydro", "WA")
+```
+Figure . Annual number of Hydro plants in Washington from 2018 to 2023.
+The solid line shows observed plant counts, while the dashed linear trend highlights the long-term direction of development. This figure illustrates how facility expansion (or contraction) unfolded over time and whether growth patterns align with overall capacity and generation trends.
 
 ### 4. Do early adopters have faster renewable expansion?
 ```{r, , echo=FALSE, message=FALSE}
