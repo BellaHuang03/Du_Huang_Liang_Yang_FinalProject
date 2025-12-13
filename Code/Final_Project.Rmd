@@ -1026,6 +1026,7 @@ mk_results %>%
 Null hypothesis (H₀): The installed capacity shows no monotonic trend over time (τ = 0).
 Alternative hypothesis (H₁): The installed capacity follows a significant monotonic trend over time (τ ≠ 0).
 The Mann–Kendall results presented in Table 2 showed that there are clear differences in long-term capacity trends between renewable technologies of Hydro, Solar, and Wind. Solar and wind both exhibit strong positive monotonic trends as they strongly rejects the null hypothesis with Kendall’s τ equal to 1.00 and statistically significant p-values (p = 0.0085). Thus, there is a consistent increasing trend in installed capacity. 
+
 On the other hand, the test result for hydroelectric capacity fails to reject the null hypothesis, with only a modest negative τ value (τ = –0.467). What’s more, its p-value (p = 0.2597>0.1) is not statistically significant, suggesting that there is not any statistically meaningful long-term trend. 
 
 ## Subsection 3: Which states contribute most to renewable capacity growth?
@@ -1242,7 +1243,8 @@ wind_TX  <- get_state_fuel_data(all_ts, "TX", "WIND")
 solar_AK <- get_state_fuel_data(all_ts, "AK", "SOLAR")
 
 ```
-By state 1:  Annual Capacity Trend (MW)
+
+
 ```{r, echo=FALSE, message=FALSE}
 plot_capacity_trend <- function(df, fuel, state) {
   ggplot(df, aes(x = Data_Year_num, y = total_capacity_MW)) +
@@ -1256,9 +1258,9 @@ plot_capacity_trend <- function(df, fuel, state) {
     ) +
     theme_minimal(base_size = 14)
 }
-
 ```
-By state 2: Annual Generation Trend (MWh)
+
+
 ```{r, echo=FALSE, message=FALSE}
 plot_generation_trend <- function(df, fuel, state) {
   ggplot(df, aes(x = Data_Year_num, y = total_generation_MWh)) +
@@ -1272,9 +1274,9 @@ plot_generation_trend <- function(df, fuel, state) {
     ) +
     theme_minimal(base_size = 14)
 }
-
 ```
-By state 3: Number of Plants Over Time
+
+
 ```{r, echo=FALSE, message=FALSE}
 plot_plant_count <- function(df, fuel, state) {
   ggplot(df, aes(x = Data_Year_num, y = n_plants)) +
@@ -1290,6 +1292,8 @@ plot_plant_count <- function(df, fuel, state) {
 }
 
 ```
+\newpage
+
 ### 3a. Wind
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 three_panel_trend_plot <- function(tech_name,
@@ -1375,24 +1379,29 @@ three_panel_trend_plot <- function(tech_name,
 }
 ```
 Across the results graph of the Texas Wind total wind generation, installed wind capacity and number of wind plants, Texas shows a consistent and accelerated growth over the 2018-2023 period. The wind number of wind plants in Texas increased steadily from around 160 plants in 2018 to over 210 by 2023. This reflects a robust pipeline of new project development and repowering efforts. Growth exceeds the linear trend in most years, indicating particularly strong expansion in 2019- 2022. With the increase of the number of wind plants, the Wind capacity rose from roughly 24-25 GW in 2018 to over 40 GW in 2023, leading to a increase of around 65% of previous number. With the growth trajectory aligned with and even exceed the linear trend, the result suggested a continued investment in larger and more efficient wind farms. Capacity additions accelerated around 2021 and 2022, consistent with the timing of  federal tax incentives and completion of major transmission upgrades such CREZ corridors, promoting utility- scale wind development and to ensure adequate transmission to bring the new power into the state’s grid. Wind generation in Texas grew substantially faster than capacity, climbing from 75-80 TWh in 2018 to more than 115 TWh in 2023, reflecting a improvement in turbine efficiency, a higher average capacity factors, a reduced curtailment due to expanded transmission. 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Figure 30. Annual installed Wind capacity in Texas from 2018 to 2023."}
 
 plot_capacity_trend(wind_TX, "Wind", "TX")
 ```
-Figure 30. Annual installed Wind capacity in Texas from 2018 to 2023.
+
+
+
 The solid line represents observed total nameplate capacity, while the dashed line shows a fitted linear trend. The figure illustrates year-to-year changes in infrastructure expansion and highlights the overall direction and magnitude of long-term growth.
 
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Figure 31 . Annual  Wind Generation in Texas from 2018 to 2023."}
 plot_generation_trend(wind_TX, "Wind", "TX")
 ```
-Figure 31 . Annual  Wind Generation in Texas from 2018 to 2023.
+
+
+
 The solid line represents observed total generation, while the dashed line shows a fitted linear trend. The figure illustrates year-to-year changes in infrastructure expansion and highlights the overall direction and magnitude of long-term growth.
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Figure 32. Annual number of Wind plants in Texas from 2018 to 2023."}
 plot_plant_count(wind_TX, "Wind", "TX")
 ```
-Figure 32. Annual number of Wind plants in Texas from 2018 to 2023.
+
+
 The solid line shows observed plant counts, while the dashed linear trend highlights the long-term direction of development. This figure illustrates how facility expansion (or contraction) unfolded over time and whether growth patterns align with overall capacity and generation trends.
 
 
@@ -1405,25 +1414,26 @@ The wind capacity data show a statistically significant increase from 2018 to 20
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 three_panel_trend_plot("SOLAR")
 ```
+
 Solar capacity shows a steady and substantial increase from 2018 to 2023. Both the LOESS trend and the linear fit indicate a strong upward trajectory, and the statistical tests confirm this pattern. The linear model estimates an average increase of about 12.7 GW per year (p = 0.000362), and the Mann–Kendall test identifies a significant monotonic upward trend (τ = 1.00, p = 0.0085). The residuals are minimal, suggesting the trend model fits well. Overall, solar capacity grew rapidly and consistently during this period.
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Figure 33. Annual installed Solar capacity in California from 2018 to 2023."}
 plot_capacity_trend(solar_CA, "Solar", "CA")
 ```
-Figure 33. Annual installed Solar capacity in California from 2018 to 2023.
+
 The solid line represents observed total nameplate capacity, while the dashed line shows a fitted linear trend. The figure illustrates year-to-year changes in infrastructure expansion and highlights the overall direction and magnitude of long-term growth.
 
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Figure 34. Annual installed Solar Generation in California from 2018 to 2023."}
 plot_generation_trend(solar_CA, "Solar", "CA")
 ```
-Figure 34. Annual installed Solar Generation in California from 2018 to 2023.
+
 The solid line represents observed total Generation, while the dashed line shows a fitted linear trend. The figure illustrates year-to-year changes in infrastructure expansion and highlights the overall direction and magnitude of long-term growth.
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Figure 35. Annual number of Solar plants in California from 2018 to 2023."}
 plot_plant_count(solar_CA, "Solar", "CA")
 ```
-Figure 35. Annual number of Solar plants in California from 2018 to 2023.
+
 The solid line shows observed plant counts, while the dashed linear trend highlights the long-term direction of development. This figure illustrates how facility expansion (or contraction) unfolded over time and whether growth patterns align with overall capacity and generation trends.
 
 
@@ -1431,22 +1441,23 @@ The solid line shows observed plant counts, while the dashed linear trend highli
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 three_panel_trend_plot("HYDRO")
 ```
+
 Hydro capacity remains mostly stable from 2018 to 2023, with slight year-to-year fluctuations but no clear upward trend. The linear model suggests a small annual decline of about 435 MW per year (p = 0.041), but the Mann–Kendall test does not detect a significant monotonic trend (τ = −0.467, p = 0.26). The discrepancy reflects minor variability rather than a strong directional shift. Overall, hydro capacity appears essentially flat over the study period, with no meaningful long-term increase or decrease.
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Figure 36. Annual installed Hydro capacity in Washington from 2018 to 2023."}
 plot_capacity_trend(hydro_WA, "Hydro", "WA")
 ```
-Figure 36. Annual installed Hydro capacity in Washington from 2018 to 2023.
+
 The solid line represents observed total nameplate capacity, while the dashed line shows a fitted linear trend. The figure illustrates year-to-year changes in infrastructure expansion and highlights the overall direction and magnitude of long-term growth.
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Figure 37. Annual installed Hydro Generation in Washington from 2018 to 2023."}
 plot_generation_trend(hydro_WA, "Hydro", "WA")
 ```
-Figure 37. Annual installed Hydro Generation in Washington from 2018 to 2023.
+
 The solid line represents observed total Generation, while the dashed line shows a fitted linear trend. The figure illustrates year-to-year changes in infrastructure expansion and highlights the overall direction and magnitude of long-term growth.
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Figure 38. Annual number of Hydro plants in Washington from 2018 to 2023."}
 plot_plant_count(hydro_WA, "Hydro", "WA")
 ```
-Figure 38. Annual number of Hydro plants in Washington from 2018 to 2023.
+
 The solid line shows observed plant counts, while the dashed linear trend highlights the long-term direction of development. This figure illustrates how facility expansion (or contraction) unfolded over time and whether growth patterns align with overall capacity and generation trends.
 
 ### 4. Do early adopters have faster renewable expansion?
@@ -1488,11 +1499,8 @@ growth_df <- wide_2018_2023 %>%
     HYDRO_abs_growth = HYDRO_MW_2023 - HYDRO_MW_2018
   )
 
-# regression
-lm(SOLAR_abs_growth ~ SOLAR_MW_2018, data = growth_df) %>% summary()
-lm(WIND_abs_growth  ~ WIND_MW_2018,  data = growth_df) %>% summary()
-lm(HYDRO_abs_growth ~ HYDRO_MW_2018, data = growth_df) %>% summary()
 ```
+
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # Run regressions for each tech
@@ -1558,7 +1566,10 @@ summary_table %>%
 
 ```
 In this analysis, early adoption is defined as the baseline renewable capacity a state possessed in 2018, the first year of our study period. States with higher 2018 capacity in a given technology are considered early adopters of that technology. Then, a regression analysis was conducted using this definition to test whether baseline capacity predicts capacity growth from 2018 to 2023.
-The regression results indicate that early adoption plays a meaningful role in predicting renewable energy growth for solar and wind technologies. States with higher baseline solar capacity in 2018 tended to add substantially more capacity by 2023, as shown by the strong positive slope (0.99) and a highly significant p-value. Wind shows a similar pattern, with a positive slope (0.59) and strong statistical significance, suggesting that states with larger initial wind investments continued to expand more rapidly. In contrast, hydro displays a small negative slope (–0.03), which, although statistically significant, likely reflects the limited opportunities for large-scale hydro expansion due to geographic and environmental constraints. Overall, the analysis suggests that solar and wind development exhibit momentum effects—states that started ahead tended to grow faster—while hydro capacity remained relatively stable or slightly declined over time.
+
+The regression results indicate that early adoption plays a meaningful role in predicting renewable energy growth for solar and wind technologies. States with higher baseline solar capacity in 2018 tended to add substantially more capacity by 2023, as shown by the strong positive slope (0.99) and a highly significant p-value. Wind shows a similar pattern, with a positive slope (0.59) and strong statistical significance, suggesting that states with larger initial wind investments continued to expand more rapidly. In contrast, hydro displays a small negative slope (-0.03), which, although statistically significant, likely reflects the limited opportunities for large-scale hydro expansion due to geographic and environmental constraints. 
+
+Overall, the analysis suggests that solar and wind development exhibit momentum effects—states that started ahead tended to grow faster—while hydro capacity remained relatively stable or slightly declined over time.
 The regression results show strong evidence of momentum effects for both solar and wind. States with higher initial solar capacity added significantly more capacity over the study period, as indicated by a near one-to-one positive slope (0.99, p < 0.001). Wind capacity displays a similar but slightly weaker pattern, with a positive slope (0.59, p < 0.001), suggesting that states with larger early wind investments continued to scale up more rapidly. In contrast, hydro exhibits a small negative slope (–0.03), likely reflecting the physical and geographic limits on expanding hydropower systems rather than meaningful declines in development activity.
 
 \newpage
@@ -1569,9 +1580,13 @@ This study examined spatial and temporal patterns of renewable energy developmen
 
 
 Solar and wind exhibit clear, statistically significant growth over the study period, while hydroelectric capacity remains essentially stable. Solar expanded at the fastest rate, increasing by approximately 12.7 GW per year, followed by wind at 10.8 GW per year, and both supported by strong linear and Mann–Kendall results. Hydroelectric capacity showed no meaningful expansion and instead a modest long-term decline of roughly 435 MW per year, reflecting geographic, infrastructural, and regulatory constraints. Generation trends align with these patterns: wind and solar production increased steadily alongside capacity growth, whereas hydroelectric generation fluctuated substantially due to hydrologic variability and infrastructural constraints.
+
 Spatial analyses reveal that renewable expansion is highly spatially concentrated. Solar growth is most pronounced in the Southwest and Southeast, while wind development remains concentrated across the Great Plains and Texas. Hydroelectric facilities remain clustered in the Pacific Northwest and Northeast, with no evidence of spatial expansion. Comparisons between 2018 and 2023 indicate that new installations primarily reinforce existing geographic clusters rather than establish new ones.
+
 Early adoption strongly predicts continued growth for solar and wind technologies. States that began with strong solar or wind portfolios in 2018 tended to experience the fastest increases through 2023. This relationship does not extend to hydropower, where expansion is limited.
+
 State-level case studies highlight the technology-specific drivers propelling these trends. California consistently leads solar development, Texas dominates wind capacity and generation, and Washington remains the center of U.S. hydropower. These leadership positions remain stable throughout the study period, which reflects long-standing resource advantages, policy support, and pre-existing infrastructure. Case studies illustrate technology-specific drivers, including Texas’s transmission investments, such as the CREZ system, Washington’s structurally fixed hydroelectric system, and California’s policy-driven solar expansion.
+
 Overall, the U.S. renewable energy landscape from 2018 to 2023 is characterized by technological divergence, persistent spatial clustering, and path-dependent growth. Solar and wind continue to expand rapidly within established regional cores, while hydropower remains largely static. States that were leaders at the start of the study period—most notably California, Texas, and Washington—continue to dominate their respective technologies, reinforcing regional specialization in the U.S. energy transition.
 
 \newpage

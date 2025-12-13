@@ -70,15 +70,18 @@ Table: eGRID2018 Plant — Column metadata
 
 ## Scripts and code
 
-|   Detail | Description                         |  
-|---------:|:------------------------------------|
-Spatial_Analysis_DataAnalysis.Rmd
-Spatial_Analysis_DataExploration.Rmd
-Spatial_Analysis_DataProcessing.Rmd
-Final_Project.Rmd
+
+| Task               | Description                 | R Markdown File                        |
+|-------------------|-----------------------------|----------------------------------------|
+| Linear regression | Time series analysis         | [TimeSA_dataprocessing.Rmd](TimeSA_dataprocessing.Rmd) |
+| mapview & ggplots | Spatial analysis & data analysis | [Spatial_Analysis_DataAnalysis.Rmd](Spatial_Analysis_DataAnalysis.Rmd) |
+| mapview & ggplots | Spatial data exploration     | [SSpatial_Analysis_DataExploration.Rmd](SSpatial_Analysis_DataExploration.Rmd) |
+| mapview & ggplots | Spatial data processing      | [Spatial_Analysis_DataProcessing.Rmd](Spatial_Analysis_DataProcessing.Rmd) |
+
+
+
 
 We only have a one data processing.Rmd file for Time Series analysis, since in our data processing, there are a few one-time codes, so we decided to keep all codes in one Rmd. However, we had clear bullet points and section titles to help ourselves keep the working space clean and efficient.
 
-|TimeSA_dataprocessing|
-
+Link to Github: https://github.com/BellaHuang03/Du_Huang_Liang_Yang_FinalProject.git 
 
