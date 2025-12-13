@@ -96,8 +96,8 @@ egrid2023_sf <- egrid2023 %>%
 
 str(egrid2023_sf)
 ```
-# 4. Map Electricity Plants Locations
-1. 2018 Electricity Plants Locations - Wind Power
+# 4. Map Power Plants Locations
+1. 2018 Power Plants Locations - Wind Power
 ```{r, Mainland USA, Wind Power}
 library(dplyr)
 library(ggplot2)
@@ -114,7 +114,7 @@ ggplot() +
     ylim = c(24, 50)
   ) +
   labs(
-    title = "2018 Wind Electricity Plants - Alaska",
+    title = "2018 Wind Power Plants - Mainland USA",
     x = "Longitude",
     y = "Latitude"
   ) +
@@ -138,7 +138,7 @@ ggplot() +
     ylim = c(51, 72)
   ) +
   labs(
-    title = "2018 Wind Electricity Plants - Alaska",
+    title = "2018 Wind Power Plants - Alaska",
     x = "Longitude",
     y = "Latitude"
   ) +
@@ -148,28 +148,38 @@ ggplot() +
 
 
 ```{r, Hawaii}
+library(dplyr)
+
 ggplot() +
-  geom_sf(data = US_counties_sf,
-          fill = "grey90",
-          color = "grey50") +
-  geom_sf(data = egrid2018_sf,
-          filter(Plant.primary.coal.oil.gas..other.fossil.fuel.category == "WIND"),
-          color = "saddlebrown",
-          size = 1) +
+  geom_sf(
+    data = US_counties_sf %>% filter(STATEFP == "15"),  # Hawaii
+    fill  = "grey90",
+    color = "grey50"
+  ) +
+  geom_sf(
+    data = egrid2018_sf %>%
+      filter(
+        Plant.state.abbreviation == "HI",
+        Plant.primary.coal.oil.gas..other.fossil.fuel.category == "WIND"
+      ),
+    color = "saddlebrown",
+    size = 1
+  ) +
   coord_sf(
     xlim = c(-160.5, -154.5),
-    ylim = c(18.5, 22.5) 
-    ) +
+    ylim = c(18.5, 22.5)
+  ) +
   labs(
-    title = "2018 Electricity Plants-Hawaii",
+    title = "2018 Wind Power Plants - Hawaii",
     x = "Longitude",
     y = "Latitude"
   ) +
   my_theme
+
 ```
 
 
-2. 2018 Electricity Plants Locations - hydro Power
+2. 2018 Power Plants Locations - hydro Power
 
 ```{r, Mainland USA, hydro Power}
 library(dplyr)
@@ -187,7 +197,7 @@ ggplot() +
     ylim = c(24, 50)
   ) +
   labs(
-    title = "2018 Hydro Electricity Plants - Mainland USA",
+    title = "2018 Hydro Power Plants - Mainland USA",
     x = "Longitude",
     y = "Latitude"
   ) +
@@ -211,7 +221,7 @@ ggplot() +
     ylim = c(51, 72)
   ) +
   labs(
-    title = "2018 Hydro Electricity Plants - Alaska",
+    title = "2018 Hydro Power Plants - Alaska",
     x = "Longitude",
     y = "Latitude"
   ) +
@@ -219,7 +229,37 @@ ggplot() +
 
 ```
 
-2. 2018 Electricity Plants Locations - solar Power
+```{r, Hawaii}
+library(dplyr)
+
+ggplot() +
+  geom_sf(
+    data = US_counties_sf %>% filter(STATEFP == "15"),  # Hawaii
+    fill  = "grey90",
+    color = "grey50"
+  ) +
+  geom_sf(
+    data = egrid2018_sf %>%
+      filter(
+        Plant.state.abbreviation == "HI",
+        Plant.primary.coal.oil.gas..other.fossil.fuel.category == "HYDRO"
+      ),
+    color = "darkblue",
+    size = 1
+  ) +
+  coord_sf(
+    xlim = c(-160.5, -154.5),
+    ylim = c(18.5, 22.5)
+  ) +
+  labs(
+    title = "2018 Hydro Power Plants - Hawaii",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+2. 2018 Power Plants Locations - solar Power
 
 ```{r, Mainland USA, solar Power}
 library(dplyr)
@@ -237,7 +277,7 @@ ggplot() +
     ylim = c(24, 50)
   ) +
   labs(
-    title = "2018 Solar Electricity Plants - Mainland USA",
+    title = "2018 Solar Power Plants - Mainland USA",
     x = "Longitude",
     y = "Latitude"
   ) +
@@ -254,21 +294,52 @@ ggplot() +
           color = "grey50") +
   geom_sf(data = egrid2018_sf %>% 
             filter(Plant.primary.coal.oil.gas..other.fossil.fuel.category == "SOLAR"),
-          color = "darkblue",
+          color = "orange",
           size = 1) +
   coord_sf(
     xlim = c(-179, -130),
     ylim = c(51, 72)
   ) +
   labs(
-    title = "2018 Solar Electricity Plants - Alaska",
+    title = "2018 Solar Power Plants - Alaska",
     x = "Longitude",
     y = "Latitude"
   ) +
   my_theme
 
 ```
-2. 2023 Electricity Plants Locations - wind Power
+
+```{r, Hawaii}
+library(dplyr)
+
+ggplot() +
+  geom_sf(
+    data = US_counties_sf %>% filter(STATEFP == "15"),  # Hawaii
+    fill  = "grey90",
+    color = "grey50"
+  ) +
+  geom_sf(
+    data = egrid2018_sf %>%
+      filter(
+        Plant.state.abbreviation == "HI",
+        Plant.primary.coal.oil.gas..other.fossil.fuel.category == "SOLAR"
+      ),
+    color = "orange",
+    size = 1
+  ) +
+  coord_sf(
+    xlim = c(-160.5, -154.5),
+    ylim = c(18.5, 22.5)
+  ) +
+  labs(
+    title = "2018 Solar Power Plants - Hawaii",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+2. 2023 Power Plants Locations - wind Power
 
 ```{r, Mainland USA, wind Power}
 library(dplyr)
@@ -286,7 +357,7 @@ ggplot() +
     ylim = c(24, 50)
   ) +
   labs(
-    title = "2023 Wind Electricity Plants - Mainland USA",
+    title = "2023 Wind Power Plants - Mainland USA",
     x = "Longitude",
     y = "Latitude"
   ) +
@@ -310,7 +381,7 @@ ggplot() +
     ylim = c(51, 72)
   ) +
   labs(
-    title = "2023 Wind Electricity Plants - Alaska",
+    title = "2023 Wind Power Plants - Alaska",
     x = "Longitude",
     y = "Latitude"
   ) +
@@ -318,6 +389,36 @@ ggplot() +
 
 ```
 
+```{r, Hawaii}
+library(dplyr)
+
+ggplot() +
+  geom_sf(
+    data = US_counties_sf %>% filter(STATEFP == "15"),  # Hawaii
+    fill  = "grey90",
+    color = "grey50"
+  ) +
+  geom_sf(
+    data = egrid2023_sf %>%
+      filter(
+        Plant.state.abbreviation == "HI",
+        Plant.primary.fuel.category == "WIND"
+      ),
+    color = "saddlebrown",
+    size = 1
+  ) +
+  coord_sf(
+    xlim = c(-160.5, -154.5),
+    ylim = c(18.5, 22.5)
+  ) +
+  labs(
+    title = "2023 Wind power Plants - Hawaii",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
 
 ```{r, Mainland USA, hydro Power}
 library(dplyr)
@@ -335,7 +436,7 @@ ggplot() +
     ylim = c(24, 50)
   ) +
   labs(
-    title = "2023 Hydro Electricity Plants - Mainland USA",
+    title = "2023 Hydro Power Plants - Mainland USA",
     x = "Longitude",
     y = "Latitude"
   ) +
@@ -359,7 +460,7 @@ ggplot() +
     ylim = c(51, 72)
   ) +
   labs(
-    title = "2023 Wind Electricity Plants - Alaska",
+    title = "2023 Hydro Power Plants - Alaska",
     x = "Longitude",
     y = "Latitude"
   ) +
@@ -367,7 +468,38 @@ ggplot() +
 
 ```
 
-```{r, Mainland USA, solar Power}
+```{r, Hawaii}
+library(dplyr)
+
+ggplot() +
+  geom_sf(
+    data = US_counties_sf %>% filter(STATEFP == "15"),  # Hawaii
+    fill  = "grey90",
+    color = "grey50"
+  ) +
+  geom_sf(
+    data = egrid2023_sf %>%
+      filter(
+        Plant.state.abbreviation == "HI",
+        Plant.primary.fuel.category == "HYDRO"
+      ),
+    color = "darkblue",
+    size = 1
+  ) +
+  coord_sf(
+    xlim = c(-160.5, -154.5),
+    ylim = c(18.5, 22.5)
+  ) +
+  labs(
+    title = "2023 Hydro power Plants - Hawaii",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+```{r, Mainland USA, hydro Power}
 library(dplyr)
 
 ggplot() +
@@ -383,13 +515,14 @@ ggplot() +
     ylim = c(24, 50)
   ) +
   labs(
-    title = "2023 Solar Electricity Plants - Mainland USA",
+    title = "2023 Solar Power Plants - Mainland USA",
     x = "Longitude",
     y = "Latitude"
   ) +
   my_theme
 
 ```
+
 
 ```{r, Alaska, solar power}
 library(dplyr)
@@ -407,7 +540,7 @@ ggplot() +
     ylim = c(51, 72)
   ) +
   labs(
-    title = "2023 Solar Electricity Plants - Alaska",
+    title = "2023 Solar Power Plants - Alaska",
     x = "Longitude",
     y = "Latitude"
   ) +
@@ -415,7 +548,37 @@ ggplot() +
 
 ```
 
-3. 2023 Electricity Plants Locations - wind Power - TX
+```{r, Hawaii}
+library(dplyr)
+
+ggplot() +
+  geom_sf(
+    data = US_counties_sf %>% filter(STATEFP == "15"),  # Hawaii
+    fill  = "grey90",
+    color = "grey50"
+  ) +
+  geom_sf(
+    data = egrid2023_sf %>%
+      filter(
+        Plant.state.abbreviation == "HI",
+        Plant.primary.fuel.category == "SOLAR"
+      ),
+    color = "orange",
+    size = 1
+  ) +
+  coord_sf(
+    xlim = c(-160.5, -154.5),
+    ylim = c(18.5, 22.5)
+  ) +
+  labs(
+    title = "2023 Solar power Plants - Hawaii",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+3. 2023 Power Plants Locations - wind Power - TX
 
 ```{r, TX_wind_power}
 library(dplyr)
@@ -439,7 +602,7 @@ ggplot() +
   ylim = c(25, 37)
   ) +
   labs(
-    title = "2018 Wind Electricity Plants - Texas",
+    title = "2018 Wind Power Plants - Texas",
     x = "Longitude",
     y = "Latitude"
   ) +
@@ -469,7 +632,7 @@ ggplot() +
   ylim = c(45, 49)   
   ) +
   labs(
-    title = "2018 Wind Electricity Plants - Washington",
+    title = "2018 Wind Power Plants - Washington",
     x = "Longitude",
     y = "Latitude"
   ) +
@@ -499,7 +662,7 @@ ggplot() +
   ylim = c(32, 42)   
   ) +
   labs(
-    title = "2018 Wind Electricity Plants - Washington",
+    title = "2018 Wind Power Plants - Washington",
     x = "Longitude",
     y = "Latitude"
   ) +
