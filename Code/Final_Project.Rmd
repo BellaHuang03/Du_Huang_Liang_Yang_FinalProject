@@ -8,6 +8,8 @@ output:
 editor_options:
   chunk_output_type: console
 ---
+
+```{=tex}
 \newpage
 \tableofcontents 
 \newpage
@@ -15,7 +17,7 @@ editor_options:
 \newpage
 \listoffigures 
 \newpage
-
+```
 ```{r setup, include=FALSE}
 # Set your working directory
 library(here)
@@ -83,21 +85,19 @@ ts2023 <- read.csv(here("Data/Raw/egrid_Data/time_series/ts2023.csv"), stringsAs
 
 ```
 
-
 # Rationale and Research Questions
 
-The U.S. energy system is undergoing a major structural shift as renewable energy, particularly wind and solar, continues to expand across the country. According to the U.S. Energy Information Administration (EIA), renewable energy sources accounted for about 21 percent of total U.S. utility-scale electricity generation in 2023, and that share continues to grow as wind, solar, and other renewables expand their role in the energy mix (EIA, 2024). Although natural gas and petroleum remain the dominant energy sources, the rapid expansion of wind and solar has become one of the most important trends shaping the nation’s electricity mix.  This study highlights the regions driving the transition and shows how quickly renewable technologies are reshaping the U.S. electricity system by examining where and when new capacity has been added, using national wind and solar capacity data from 2018–2023 to analyze these trends.
+The U.S. energy system is undergoing a major structural shift as renewable energy, particularly wind and solar, continues to expand across the country. According to the U.S. Energy Information Administration (EIA), renewable energy sources accounted for about 21 percent of total U.S. utility-scale electricity generation in 2023, and that share continues to grow as wind, solar, and other renewables expand their role in the energy mix (EIA, 2024). Although natural gas and petroleum remain the dominant energy sources, the rapid expansion of wind and solar has become one of the most important trends shaping the nation’s electricity mix. This study highlights the regions driving the transition and shows how quickly renewable technologies are reshaping the U.S. electricity system by examining where and when new capacity has been added, using national wind and solar capacity data from 2018–2023 to analyze these trends.
 
-Understanding how renewable capacity is changing spatially and temporally is essential for assessing the pace of the U.S. energy transition. Facility-level datasets from the EIA Form 860 and the EPA’s eGRID provide detailed information on generator technology, capacity (MW), location, and in-service dates, which can be used for analyzing both annual growth patterns and geographic distribution of renewable development.  
+Understanding how renewable capacity is changing spatially and temporally is essential for assessing the pace of the U.S. energy transition. Facility-level datasets from the EIA Form 860 and the EPA’s eGRID provide detailed information on generator technology, capacity (MW), location, and in-service dates, which can be used for analyzing both annual growth patterns and geographic distribution of renewable development.
 
 ## Research questions
 
-1. Which U.S. states have experienced the fastest growth in renewable energy capacity from 2018 to 2023, and how does this growth vary by technology?
+1.  Which U.S. states have experienced the fastest growth in renewable energy capacity from 2018 to 2023, and how does this growth vary by technology?
 
-2. Is renewable energy capacity growth spatially clustered across the United States, and do different technologies exhibit distinct geographic patterns of expansion?
+2.  Is renewable energy capacity growth spatially clustered across the United States, and do different technologies exhibit distinct geographic patterns of expansion?
 
-3. Does early adoption predict faster renewable expansion?
-
+3.  Does early adoption predict faster renewable expansion?
 
 \newpage
 
@@ -105,8 +105,7 @@ Understanding how renewable capacity is changing spatially and temporally is ess
 
 ## Data Source and Collection
 
-This analysis uses data from the Emissions & Generation Resource Integrated Database (eGRID) published by the U.S. Environmental Protection Agency (EPA) for the years 2018–2023. The datasets were obtained from the EPA eGRID archive as a series of Microsoft Excel files corresponding to each reporting year. eGRID compiles electricity generation and capacity data reported annually by U.S. power plants to the U.S. Energy Information Administration (EIA), primarily through EIA Forms 860 and 923, into a standardized national database.
-To support spatial analysis, this study also incorporates the 2018 Cartographic Boundary File for U.S. counties and county-equivalent units produced by the U.S. Census Bureau. This polygon shapefile provides generalized county boundaries for the entire United States and its territories and is intended for small-scale thematic mapping. The dataset reflects administrative boundaries as of January 1, 2018, is referenced to NAD83, and was used as a spatial framework for aggregating and visualizing plant-level eGRID data.
+This analysis uses data from the Emissions & Generation Resource Integrated Database (eGRID) published by the U.S. Environmental Protection Agency (EPA) for the years 2018–2023. The datasets were obtained from the EPA eGRID archive as a series of Microsoft Excel files corresponding to each reporting year. eGRID compiles electricity generation and capacity data reported annually by U.S. power plants to the U.S. Energy Information Administration (EIA), primarily through EIA Forms 860 and 923, into a standardized national database. To support spatial analysis, this study also incorporates the 2018 Cartographic Boundary File for U.S. counties and county-equivalent units produced by the U.S. Census Bureau. This polygon shapefile provides generalized county boundaries for the entire United States and its territories and is intended for small-scale thematic mapping. The dataset reflects administrative boundaries as of January 1, 2018, is referenced to NAD83, and was used as a spatial framework for aggregating and visualizing plant-level eGRID data.
 
 ## Data Content and Structure
 
@@ -118,15 +117,15 @@ Key variables extracted for analysis include reporting year, plant location, fue
 
 Due to the large size of the raw eGRID files, initial data preparation was performed in Excel prior to analysis in R. Plant-level tables for each year (2018–2023) were converted to CSV format, and only variables required for the analytical objectives were retained due to limited storage on GitHub. To support different analytical goals, two processed versions of the dataset were created and stored in the repository (Data/Raw):
 
-- Time-series dataset: retained columns related to reporting year, fuel or technology category, capacity, generation, and other temporal attributes.
+-   Time-series dataset: retained columns related to reporting year, fuel or technology category, capacity, generation, and other temporal attributes.
 
-- Spatial dataset: retained plant location and geographic identifiers, including state, latitude, longitude, plant identifiers, and renewable classification.
+-   Spatial dataset: retained plant location and geographic identifiers, including state, latitude, longitude, plant identifiers, and renewable classification.
 
-Unused variables were removed to reduce file size and accommodate repository storage constraints. Missing values were assessed, particularly in coordinate and fuel-type fields, and records lacking essential information were excluded from aggregation. Data were subsequently summarized by fuel type and location to support both temporal trend analysis and spatial visualization. 
+Unused variables were removed to reduce file size and accommodate repository storage constraints. Missing values were assessed, particularly in coordinate and fuel-type fields, and records lacking essential information were excluded from aggregation. Data were subsequently summarized by fuel type and location to support both temporal trend analysis and spatial visualization.
 
 \newpage
 
-# Exploratory Analysis 
+# Exploratory Analysis
 
 ## Spatial Exploratory Analysis
 
@@ -140,7 +139,6 @@ mapview(US_counties_sf)
 ```
 
 Figure 1. Interactive Map. County boundaries of the United States displayed from a county-level shapefile. The map allows zooming and panning to explore spatial variation in county size and distribution. Data source: U.S. Census Bureau TIGER/Line Shapefiles
-
 
 ```{r, convert df to sf, echo=FALSE, include=FALSE}
 egrid2018_sf <- egrid2018 %>%
@@ -179,7 +177,6 @@ ggplot() +
   my_theme
 ```
 
-
 ```{r, Alaska Locations, echo=FALSE, message=FALSE, fig.cap="Figure 3. Locations of electricity generating plants in Alaska, United States in 2018. Power plants are shown as blue points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 ggplot() +
   geom_sf(data = US_counties_sf,
@@ -199,7 +196,6 @@ ggplot() +
   ) +
   my_theme
 ```
-
 
 ```{r, Hawaii Locations, echo=FALSE, message=FALSE, echo=FALSE, message=FALSE, fig.cap="Figure 4. Locations of electricity generating plants in Hawaii, United States in 2018. Power plants are shown as blue points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 ggplot() +
@@ -352,21 +348,595 @@ Figure 8. Interactive Map. Total number of electricity generators by state in th
 
 # Analysis
 
+## Question 1: \<insert specific question here and add additional subsections for additional questions below, if needed\>
 
+## Question 2:
 
-## Question 1: <insert specific question here and add additional subsections for additional questions below, if needed>
+### 1. Geographic Distribution Pattern of Power Plant in USA for Wind, Hydro, and Solar Tech
 
-## Question 2: 
+### Wind Power
+```{r, Mainland USA, Wind Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 9. 2018 Wind Power Plants - Mainland USA. Power plants are shown as brown points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+library(ggplot2)
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2018_sf %>% 
+            filter(Plant.primary.coal.oil.gas..other.fossil.fuel.category == "WIND"),
+          color = "saddlebrown",
+          size = 0.5) +
+  coord_sf(
+    xlim = c(-125, -65), 
+    ylim = c(24, 50)
+  ) +
+  labs(
+    title = "2018 Wind Power Plants - Mainland USA",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
 
+```
 
+```{r, Alaska, Wind Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 10. 2018 Wind Power Plants - Alaska. Power plants are shown as brown points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
 
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2018_sf %>% 
+            filter(Plant.primary.coal.oil.gas..other.fossil.fuel.category == "WIND"),
+          color = "saddlebrown",
+          size = 1) +
+  coord_sf(
+    xlim = c(-179, -130),
+    ylim = c(51, 72)
+  ) +
+  labs(
+    title = "2018 Wind Power Plants - Alaska",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+```{r, Hawaii, Wind Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 11. 2018 Wind Power Plants - Hawaii. Power plants are shown as brown points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+
+ggplot() +
+  geom_sf(
+    data = US_counties_sf %>% filter(STATEFP == "15"),  # Hawaii
+    fill  = "grey90",
+    color = "grey50"
+  ) +
+  geom_sf(
+    data = egrid2018_sf %>%
+      filter(
+        Plant.state.abbreviation == "HI",
+        Plant.primary.coal.oil.gas..other.fossil.fuel.category == "WIND"
+      ),
+    color = "saddlebrown",
+    size = 1
+  ) +
+  coord_sf(
+    xlim = c(-160.5, -154.5),
+    ylim = c(18.5, 22.5)
+  ) +
+  labs(
+    title = "2018 Wind Power Plants - Hawaii",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+```{r, Mainland USA, Wind Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 18. 2023 Wind Power Plants - Mainland USA. Power plants are shown as brown points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2023_sf %>% 
+            filter(Plant.primary.fuel.category == "WIND"),
+          color = "saddlebrown",
+          size = 0.5) +
+  coord_sf(
+    xlim = c(-125, -65), 
+    ylim = c(24, 50)
+  ) +
+  labs(
+    title = "2023 Wind Power Plants - Mainland USA",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+```{r, Alaska, Wind Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 19. 2023 Wind Power Plants - Alaska. Power plants are shown as brown points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2023_sf %>% 
+            filter(Plant.primary.fuel.category == "WIND"),
+          color = "saddlebrown",
+          size = 1) +
+  coord_sf(
+    xlim = c(-179, -130),
+    ylim = c(51, 72)
+  ) +
+  labs(
+    title = "2023 Wind Power Plants - Alaska",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+```{r, Hawaii, Wind Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 20. 2023 Wind Power Plants - Hawaii. Power plants are shown as brown points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+
+ggplot() +
+  geom_sf(
+    data = US_counties_sf %>% filter(STATEFP == "15"),  # Hawaii
+    fill  = "grey90",
+    color = "grey50"
+  ) +
+  geom_sf(
+    data = egrid2023_sf %>%
+      filter(
+        Plant.state.abbreviation == "HI",
+        Plant.primary.fuel.category == "WIND"
+      ),
+    color = "saddlebrown",
+    size = 1
+  ) +
+  coord_sf(
+    xlim = c(-160.5, -154.5),
+    ylim = c(18.5, 22.5)
+  ) +
+  labs(
+    title = "2023 Wind power Plants - Hawaii",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+The contrasting distribution of wind electricity plants between the mainland United States and Alaska is driven largely by differences in wind resource quality and underlying geography. The mainland map shows dense clusters of wind facilities across the Great Plains and upper Midwest: regions characterized by flat terrain and some of the most consistent, high-quality onshore wind resources in the world. These geographic and atmospheric conditions create an expansive “wind belt” extending from Texas through the Dakotas, making large-scale wind farm development both feasible and economically attractive (U.S. Department of Agriculture, 2022). In contrast, Alaska’s harsh climate and highly variable wind regimes limit where turbines can be reliably sited. Although strong winds exist along coastal and mountainous areas, much of Alaska’s landscape faces environmental and operational constraints such as icing, extreme cold, and limited accessible flat land (U.S. Department of Energy, 2021). As a result, wind development in Alaska remains sparse and localized, while the mainland supports widespread utility-scale installations. 
+
+### Hydro Power
+```{r, Mainland USA, Hydro Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 12. 2018 Hydro Power Plants - Mainland USA. Power plants are shown as dark blue points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2018_sf %>% 
+            filter(Plant.primary.coal.oil.gas..other.fossil.fuel.category == "HYDRO"),
+          color = "darkblue",
+          size = 0.5) +
+  coord_sf(
+    xlim = c(-125, -65), 
+    ylim = c(24, 50)
+  ) +
+  labs(
+    title = "2018 Hydro Power Plants - Mainland USA",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+```{r, Alaska, Hydro Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 13. 2018 Hydro Power Plants - Alaska. Power plants are shown as dark blue points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2018_sf %>% 
+            filter(Plant.primary.coal.oil.gas..other.fossil.fuel.category == "HYDRO"),
+          color = "darkblue",
+          size = 1) +
+  coord_sf(
+    xlim = c(-179, -130),
+    ylim = c(51, 72)
+  ) +
+  labs(
+    title = "2018 Hydro Power Plants - Alaska",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+```{r, Hawaii, Hydro Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 14. 2018 Hydro Power Plants - Hawaii. Power plants are shown as dark blue points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+
+ggplot() +
+  geom_sf(
+    data = US_counties_sf %>% filter(STATEFP == "15"),  # Hawaii
+    fill  = "grey90",
+    color = "grey50"
+  ) +
+  geom_sf(
+    data = egrid2018_sf %>%
+      filter(
+        Plant.state.abbreviation == "HI",
+        Plant.primary.coal.oil.gas..other.fossil.fuel.category == "HYDRO"
+      ),
+    color = "darkblue",
+    size = 1
+  ) +
+  coord_sf(
+    xlim = c(-160.5, -154.5),
+    ylim = c(18.5, 22.5)
+  ) +
+  labs(
+    title = "2018 Hydro Power Plants - Hawaii",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+```{r, Mainland USA, Hydro Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 21. 2023 Hydro Power Plants - Mainland USA. Power plants are shown as dark blue points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2023_sf %>% 
+            filter(Plant.primary.fuel.category == "HYDRO"),
+          color = "darkblue",
+          size = 0.5) +
+  coord_sf(
+    xlim = c(-125, -65), 
+    ylim = c(24, 50)
+  ) +
+  labs(
+    title = "2023 Hydro Power Plants - Mainland USA",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+```{r, Alaska, Hydro Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 22. 2023 Hydro Power Plants - Alaska. Power plants are shown as dark blue points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2023_sf %>% 
+            filter(Plant.primary.fuel.category == "HYDRO"),
+          color = "darkblue",
+          size = 1) +
+  coord_sf(
+    xlim = c(-179, -130),
+    ylim = c(51, 72)
+  ) +
+  labs(
+    title = "2023 Hydro Power Plants - Alaska",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+```{r, Hawaii, Hydro Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 23. 2023 Hydro Power Plants - Hawaii. Power plants are shown as dark blue points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+
+ggplot() +
+  geom_sf(
+    data = US_counties_sf %>% filter(STATEFP == "15"),  # Hawaii
+    fill  = "grey90",
+    color = "grey50"
+  ) +
+  geom_sf(
+    data = egrid2023_sf %>%
+      filter(
+        Plant.state.abbreviation == "HI",
+        Plant.primary.fuel.category == "HYDRO"
+      ),
+    color = "darkblue",
+    size = 1
+  ) +
+  coord_sf(
+    xlim = c(-160.5, -154.5),
+    ylim = c(18.5, 22.5)
+  ) +
+  labs(
+    title = "2023 Hydro power Plants - Hawaii",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+Hydroelectric plant distribution in the mainland U.S. and Alaska is shaped primarily by geography and hydrological conditions. In the mainland, hydro facilities cluster in the Pacific Northwest, the Sierra Nevada, and parts of the Appalachians—regions with steep terrain, major river systems, and abundant water flow that make large-scale hydropower feasible (U.S. Department of Energy, 1998). In contrast, Alaska’s hydro plants are concentrated along the southeastern coastline, where heavy rainfall and mountainous topography create ideal small- to medium-scale hydro sites. Much of Alaska’s interior lacks sufficient river gradients or water volume, limiting hydropower development. 
+
+### Solar Power
+```{r, Mainland USA, Solar Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 15. 2018 Solar Power Plants - Mainland USA. Power plants are shown as orange points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2018_sf %>% 
+            filter(Plant.primary.coal.oil.gas..other.fossil.fuel.category == "SOLAR"),
+          color = "orange",
+          size = 0.5) +
+  coord_sf(
+    xlim = c(-125, -65), 
+    ylim = c(24, 50)
+  ) +
+  labs(
+    title = "2018 Solar Power Plants - Mainland USA",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+```{r, Alaska, Solar Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 16. 2018 Solar Power Plants - Alaska. Power plants are shown as orange points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2018_sf %>% 
+            filter(Plant.primary.coal.oil.gas..other.fossil.fuel.category == "SOLAR"),
+          color = "orange",
+          size = 1) +
+  coord_sf(
+    xlim = c(-179, -130),
+    ylim = c(51, 72)
+  ) +
+  labs(
+    title = "2018 Solar Power Plants - Alaska",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+```{r, Hawaii, Solar Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 17. 2018 Solar Power Plants - Mainland USA. Power plants are shown as orange points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+
+ggplot() +
+  geom_sf(
+    data = US_counties_sf %>% filter(STATEFP == "15"),  # Hawaii
+    fill  = "grey90",
+    color = "grey50"
+  ) +
+  geom_sf(
+    data = egrid2018_sf %>%
+      filter(
+        Plant.state.abbreviation == "HI",
+        Plant.primary.coal.oil.gas..other.fossil.fuel.category == "SOLAR"
+      ),
+    color = "orange",
+    size = 1
+  ) +
+  coord_sf(
+    xlim = c(-160.5, -154.5),
+    ylim = c(18.5, 22.5)
+  ) +
+  labs(
+    title = "2018 Solar Power Plants - Hawaii",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+```{r, Mainland USA, Solar Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 24. 2023 Solar Power Plants - Mainland USA. Power plants are shown as dark blue points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2023_sf %>% 
+            filter(Plant.primary.fuel.category == "SOLAR"),
+          color = "orange",
+          size = 0.5) +
+  coord_sf(
+    xlim = c(-125, -65), 
+    ylim = c(24, 50)
+  ) +
+  labs(
+    title = "2023 Solar Power Plants - Mainland USA",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+```{r, Alaska, Solar Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 25. 2023 Solar Power Plants - Alaska. Power plants are shown as orange points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+
+ggplot() +
+  geom_sf(data = US_counties_sf,
+          fill = "grey90",
+          color = "grey50") +
+  geom_sf(data = egrid2023_sf %>% 
+            filter(Plant.primary.fuel.category == "SOLAR"),
+          color = "orange",
+          size = 1) +
+  coord_sf(
+    xlim = c(-179, -130),
+    ylim = c(51, 72)
+  ) +
+  labs(
+    title = "2023 Solar Power Plants - Alaska",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+```{r, Hawaii, Solar Power Plant, 2023, echo=FALSE, message=FALSE, fig.cap="Figure 26. 2023 Solar Power Plants - Hawaii. Power plants are shown as orange points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+
+ggplot() +
+  geom_sf(
+    data = US_counties_sf %>% filter(STATEFP == "15"),  # Hawaii
+    fill  = "grey90",
+    color = "grey50"
+  ) +
+  geom_sf(
+    data = egrid2023_sf %>%
+      filter(
+        Plant.state.abbreviation == "HI",
+        Plant.primary.fuel.category == "SOLAR"
+      ),
+    color = "orange",
+    size = 1
+  ) +
+  coord_sf(
+    xlim = c(-160.5, -154.5),
+    ylim = c(18.5, 22.5)
+  ) +
+  labs(
+    title = "2023 Solar power Plants - Hawaii",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  my_theme
+
+```
+
+The distribution of solar electricity plants in the mainland United States reflects the strong relationship between solar development and solar resource availability, climate, and land suitability. In the mainland U.S. map, solar facilities are heavily concentrated in the Southwest, including California, Arizona, Nevada, New Mexico, and Texas—regions with some of the highest solar irradiance in the country and large areas of open land well suited for utility-scale solar farms. Additional clusters appear in the Southeast and Mid-Atlantic, where supportive policies and growing energy demand have encouraged solar expansion despite slightly lower sunlight levels (National Renewable Energy Laboratory. 2018). In contrast, Alaska has no utility-scale solar plants in 2018, largely because the state receives far fewer hours of sunlight, especially in winter, and experiences long periods of low solar angle and cloudiness. These geographic and climatic constraints make Alaska unsuitable for large-scale solar development. However, there is one solar panel spotted in Alaska in 2023. 
+
+## Question 2:
+
+```{r, TX, echo=FALSE, message=FALSE, fig.cap="Figure 27. Spatial Distribution of Texas Power Plants by Primary Fuel Type, 2023. Power plants are shown as colorful points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+
+ggplot() +
+  geom_sf(
+    data = US_counties_sf %>% 
+      filter(STATEFP == "48"),   
+    fill = "grey90",
+    color = "grey50"
+  ) +
+  geom_sf(
+    data = egrid2023_sf %>% 
+      filter(Plant.state.abbreviation == "TX"),
+    aes(color = Plant.primary.fuel.category),
+    size = 1
+  ) +
+  coord_sf(
+    xlim = c(-107, -92),   
+    ylim = c(25, 37)
+  ) +
+  labs(
+    title = "Spatial Distribution of Texas Power Plants by Primary Fuel Type, 2023",
+    x = "Longitude",
+    y = "Latitude",
+    color = "Fuel Type"
+  ) +
+  my_theme
+
+```
+
+```{r, WA, echo=FALSE, message=FALSE, fig.cap="Figure 28. Spatial Distribution of Washington Power Plants by Primary Fuel Type, 2023. Power plants are shown as colorful points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+
+ggplot() +
+  geom_sf(
+    data = US_counties_sf %>% 
+      filter(STATEFP == "53"),   
+    fill = "grey90",
+    color = "grey50"
+  ) +
+ geom_sf(
+  data = egrid2023_sf %>% 
+    filter(Plant.state.abbreviation == "WA"),
+  aes(color = Plant.primary.fuel.category),
+  size = 1
+) +
+
+  coord_sf(
+    xlim = c(-125, -116),   
+  ylim = c(45, 49)   
+  ) +
+  labs(
+    title = "Spatial Distribution of Washington Power Plants by Primary Fuel Type, 2023",
+    x = "Longitude",
+    y = "Latitude",
+    color = "Fuel Type"
+  ) +
+  my_theme
+
+```
+
+```{r, CA, echo=FALSE, message=FALSE, fig.cap="Figure 29. Spatial Distribution of California Power Plants by Primary Fuel Type, 2023. Power plants are shown as colorful points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+library(dplyr)
+
+ggplot() +
+  geom_sf(
+    data = US_counties_sf %>% 
+      filter(STATEFP == "06"),   
+    fill = "grey90",
+    color = "grey50"
+  ) +
+ geom_sf(
+  data = egrid2023_sf %>% 
+    filter(Plant.state.abbreviation == "CA"),
+  aes(color = Plant.primary.fuel.category),
+  size = 1
+) +
+
+  coord_sf(
+    xlim = c(-125, -113),
+  ylim = c(32, 42)   
+  ) +
+  labs(
+    title = "2018 Wind Power Plants - Washington",
+    x = "Longitude",
+    y = "Latitude",
+    color = "Fuel Type"
+  ) +
+  my_theme
+
+```
 
 \newpage
 
 # Summary and Conclusions
 
-
 \newpage
 
 # References
-<add references here if relevant, otherwise delete this section> 
+
+\<add references here if relevant, otherwise delete this section\>
