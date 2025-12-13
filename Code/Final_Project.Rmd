@@ -40,6 +40,7 @@ library(forcats)
 library(cowplot)
 library(purrr)
 library(tibble)
+library(kableExtra)
 
 # Packages for Spatial Analysis
 library(RColorBrewer)
@@ -76,12 +77,12 @@ egrid2022 <- read.csv(here("Data/Processed/Spatial_analysis/egrid2022_clean.csv"
 egrid2023 <- read.csv(here("Data/Processed/Spatial_analysis/egrid2023_clean.csv"), stringsAsFactors = TRUE)
 
 # Datasets for time series analysis
-ts2018 <- read.csv(here("Data/Raw/egrid_Data/time_series/ts2018.csv"), stringsAsFactors = TRUE)
-ts2019 <- read.csv(here("Data/Raw/egrid_Data/time_series/ts2019.csv"), stringsAsFactors = TRUE)
-ts2020 <- read.csv(here("Data/Raw/egrid_Data/time_series/ts2020.csv"), stringsAsFactors = TRUE)
-ts2021 <- read.csv(here("Data/Raw/egrid_Data/time_series/ts2021.csv"), stringsAsFactors = TRUE)
-ts2022 <- read.csv(here("Data/Raw/egrid_Data/time_series/ts2022.csv"), stringsAsFactors = TRUE)
-ts2023 <- read.csv(here("Data/Raw/egrid_Data/time_series/ts2023.csv"), stringsAsFactors = TRUE)
+ts2018 <- read_csv("Data/Raw/egrid_Data/time_series/ts2018.csv")
+ts2019 <- read_csv("Data/Raw/egrid_Data/time_series/ts2019.csv")
+ts2020 <- read_csv("Data/Raw/egrid_Data/time_series/ts2020.csv")
+ts2021 <- read_csv("Data/Raw/egrid_Data/time_series/ts2021.csv")
+ts2022 <- read_csv("Data/Raw/egrid_Data/time_series/ts2022.csv")
+ts2023 <- read_csv("Data/Raw/egrid_Data/time_series/ts2023.csv")
 
 ```
 
@@ -344,17 +345,166 @@ mapview(US_states_joined,
 
 Figure 8. Interactive Map. Total number of electricity generators by state in the United States (2018). Generator totals are aggregated from plant-level data and visualized using a color gradient. Data sources: EPA eGRID (2018); U.S. Census Bureau TIGER/Line Shapefiles.
 
+### 5. Total Installed Renewable Capacity by Fuel Type
+```{r, echo=FALSE}
+# data processing 
+all_ts <- bind_rows(
+  ts2018,
+  ts2019,
+  ts2020,
+  ts2021,
+  ts2022,
+  ts2023,
+  .id = "source_file")
+
+all_ts <- all_ts %>%
+  mutate(across(everything(), ~ na_if(.x, "")))
+
+all_ts$FuelUnified <- dplyr::coalesce(
+  all_ts$`Plant primary fuel category`,
+  all_ts$`Plant primary coal/oil/gas/ other fossil fuel category`
+)
+
+all_ts <- all_ts %>%
+  filter(
+    `Plant nameplate capacity (MW)` != "NAMEPCAP",
+    `Plant annual net generation (MWh)` != "PLNGENAN",
+    `Plant name` != "PNAME",
+    `Data Year` != "YEAR"
+  ) %>%
+  select(
+    -source_file,
+    -`Plant primary fuel category`
+  )
+
+all_ts <- all_ts %>%
+  mutate(
+    cap_mw = parse_number(`Plant nameplate capacity (MW)`),
+    gen_mwh = parse_number(`Plant annual net generation (MWh)`)
+  )
+
+all_ts <- all_ts %>%
+  mutate(
+    Data_Year_char = as.character(`Data Year`),
+    Data_Year_num  = as.integer(Data_Year_char)
+  )
+
+```
+
+```{r, Total Installed Renewable Capacity by Fuel Type, echo=FALSE, message=FALSE, fig.cap="Graph 1. Total Installed Renewable Capacity by Fuel Type from 2018 to 2023. Different fuel type are shown as different colors. Data source: EPA eGRID (2018-2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+e_annual_totals <- all_ts %>%
+  filter(!is.na(FuelUnified)) %>%
+  group_by(Data_Year_num, FuelUnified) %>%
+  summarise(
+    total_capacity_MW = sum(cap_mw, na.rm = TRUE),
+    total_generation_MWh = sum(gen_mwh, na.rm = TRUE),
+    n_plants = n(),
+    .groups = "drop")
+
+renewables <- c("SOLAR", "WIND", "HYDRO", "GEOTHERMAL", "BIOMASS")
+
+renewable_totals <- e_annual_totals %>%
+  filter(FuelUnified %in% c("SOLAR", "WIND", "HYDRO", "GEOTHERMAL", "BIOMASS"))
+
+ggplot(renewable_totals,
+       aes(x = Data_Year_num,
+           y = total_capacity_MW,
+           fill = FuelUnified)) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
+  labs(
+    title = "Total Installed Renewable Capacity by Fuel Type",
+    x = "Year",
+    y = "Total Renewable Capacity (MW)",
+    fill = "Fuel Type"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "right",
+    axis.title.x = element_text(margin = margin(t = 10)),
+    axis.title.y = element_text(margin = margin(r = 10))
+  )
+```
+
 \newpage
 
 # Analysis
 
-## Question 1: \<insert specific question here and add additional subsections for additional questions below, if needed\>
+## Subsection 1: How have Wind, Solar, and Hydro capacities evolved from 2018–2023?
 
-## Question 2:
+### 1. Visualization 
+
+```{r, Renewable Energy Expansion: Capacity and Generation Growth Across Technologies (2018–2023), echo=FALSE, message=FALSE, fig.cap="Graph 2. Renewable Energy Expansion: Capacity and Generation Growth Across Technologies (2018–2023). The dotted lines indicate the smoothed trend across years for each technology’s capacity and generation additions. Data source: EPA eGRID (2018-2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
+annual_totals <- all_ts %>%
+  filter(FuelUnified %in% c("WIND", "SOLAR", "HYDRO")) %>%
+  group_by(Data_Year_num, FuelUnified) %>%
+  summarise(
+    total_capacity_MW = sum(cap_mw, na.rm = TRUE),
+    total_generation_MWh = sum(gen_mwh, na.rm = TRUE),
+    n_plants = n(),
+    .groups = "drop"
+  )
+# Graph 1
+p1 <- ggplot(annual_totals, aes(x = Data_Year_num, y = total_capacity_MW, color = FuelUnified)) +
+  geom_line(linewidth = 1.3) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = FALSE, linetype = "dashed") +
+  labs(
+    title = "Wind, Solar, and Hydro Capacity Additions (2018–2023)",
+    x = "Year",
+    y = "Total Nameplate Capacity (MW)",
+    color = "Technology"
+  ) +
+  theme_minimal(base_size = 14)
+
+# Graph 2
+p2 <- ggplot(annual_totals, aes(x = Data_Year_num, y = total_generation_MWh, color = FuelUnified)) +
+  geom_line(linewidth = 1.3) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = FALSE, linetype = "dashed") +
+  labs(
+    title = "Wind, Solar, and Hydro Generation Additions (2018–2023)",
+    x = "Year",
+    y = "Total Generation (MWh)",
+    color = "Technology"
+  ) +
+  theme_minimal(base_size = 14)
+
+cowplot::plot_grid(p1, p2, ncol = 1, align = "hv")
+```
+
+Graph 2  shows how electricity generation from wind, solar, and hydroelectric sources has changed from 2018 to 2023. During this period, solar generation increased the most, reflecting the rapid growth in installed solar capacity and improvements in system efficiency. Wind generation continued to rise as well, though at a steadier pace, building on its already large share of renewable output. In contrast, hydroelectric generation remained fairly stable over these years, which aligns with the limited expansion of hydro infrastructure and the fact that hydro output is more strongly influenced by long-term facility operations and water availability than by new capacity additions.
+
+### 2. Statistical analysis
+```{r, echo=FALSE, message=FALSE, tab.cap="Table 1. Trend in Installed Nameplate Capacity (2018–2023)"}
+techs <- c("HYDRO", "SOLAR", "WIND")
+
+trend_lm <- annual_totals %>%
+  filter(FuelUnified %in% techs) %>%
+  group_by(FuelUnified) %>%
+  do(tidy(lm(total_capacity_MW ~ Data_Year_num, data = .))) %>%
+  filter(term == "Data_Year_num") %>%
+  select(
+    Technology = FuelUnified,
+    Slope_MW_per_yr = estimate,
+    Std_Error = std.error,
+    t_stat = statistic,
+    p_value = p.value
+  )
+
+trend_lm %>%
+  knitr::kable(
+    format = "html",
+    caption = "Trend in Installed Nameplate Capacity (2018–2023)"
+  ) %>%
+  kable_styling(full_width = TRUE)
+```
+The results from Table 1 show that solar capacity increased the fastest, growing by approximately 12.7 gigawatts per year, while wind followed closely at about 10.8 gigawatts per year. Both of these trends are statistically significant, indicating strong and consistent national expansion for solar and wind over the study period. In contrast, hydroelectric capacity shows a small but statistically significant decline of about 435 megawatts per year, reflecting the limited opportunities for new hydropower development and the gradual reduction or aging of existing facilities. 
+
+## Subsection 2: How have capacity levels changed for each technology? Do different technologies exhibit distinct geographic patterns of expansion?
 
 ### 1. Geographic Distribution Pattern of Power Plant in USA for Wind, Hydro, and Solar Tech
 
-### Wind Power
+#### Wind Power
 ```{r, Mainland USA, Wind Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 9. 2018 Wind Power Plants - Mainland USA. Power plants are shown as brown points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 library(dplyr)
 library(ggplot2)
@@ -515,7 +665,7 @@ ggplot() +
 
 The contrasting distribution of wind electricity plants between the mainland United States and Alaska is driven largely by differences in wind resource quality and underlying geography. The mainland map shows dense clusters of wind facilities across the Great Plains and upper Midwest: regions characterized by flat terrain and some of the most consistent, high-quality onshore wind resources in the world. These geographic and atmospheric conditions create an expansive “wind belt” extending from Texas through the Dakotas, making large-scale wind farm development both feasible and economically attractive (U.S. Department of Agriculture, 2022). In contrast, Alaska’s harsh climate and highly variable wind regimes limit where turbines can be reliably sited. Although strong winds exist along coastal and mountainous areas, much of Alaska’s landscape faces environmental and operational constraints such as icing, extreme cold, and limited accessible flat land (U.S. Department of Energy, 2021). As a result, wind development in Alaska remains sparse and localized, while the mainland supports widespread utility-scale installations. 
 
-### Hydro Power
+#### Hydro Power
 ```{r, Mainland USA, Hydro Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 12. 2018 Hydro Power Plants - Mainland USA. Power plants are shown as dark blue points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 library(dplyr)
 
@@ -676,7 +826,7 @@ ggplot() +
 
 Hydroelectric plant distribution in the mainland U.S. and Alaska is shaped primarily by geography and hydrological conditions. In the mainland, hydro facilities cluster in the Pacific Northwest, the Sierra Nevada, and parts of the Appalachians—regions with steep terrain, major river systems, and abundant water flow that make large-scale hydropower feasible (U.S. Department of Energy, 1998). In contrast, Alaska’s hydro plants are concentrated along the southeastern coastline, where heavy rainfall and mountainous topography create ideal small- to medium-scale hydro sites. Much of Alaska’s interior lacks sufficient river gradients or water volume, limiting hydropower development. 
 
-### Solar Power
+#### Solar Power
 ```{r, Mainland USA, Solar Power Plant, 2018, echo=FALSE, message=FALSE, fig.cap="Figure 15. 2018 Solar Power Plants - Mainland USA. Power plants are shown as orange points. Data source: EPA eGRID (2018).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 library(dplyr)
 
@@ -837,7 +987,46 @@ ggplot() +
 
 The distribution of solar electricity plants in the mainland United States reflects the strong relationship between solar development and solar resource availability, climate, and land suitability. In the mainland U.S. map, solar facilities are heavily concentrated in the Southwest, including California, Arizona, Nevada, New Mexico, and Texas—regions with some of the highest solar irradiance in the country and large areas of open land well suited for utility-scale solar farms. Additional clusters appear in the Southeast and Mid-Atlantic, where supportive policies and growing energy demand have encouraged solar expansion despite slightly lower sunlight levels (National Renewable Energy Laboratory. 2018). In contrast, Alaska has no utility-scale solar plants in 2018, largely because the state receives far fewer hours of sunlight, especially in winter, and experiences long periods of low solar angle and cloudiness. These geographic and climatic constraints make Alaska unsuitable for large-scale solar development. However, there is one solar panel spotted in Alaska in 2023. 
 
-## Question 2:
+### 2. Statistical and Time Series Analysis
+
+```{r, echo=FALSE, message=FALSE, tab.cap="Table 2. Mann–Kendall Trend Test for Installed Nameplate Capacity (2018–2023)"}
+techs <- c("HYDRO", "SOLAR", "WIND")
+
+mk_results <- annual_totals %>%
+  filter(FuelUnified %in% techs) %>%
+  group_by(FuelUnified) %>%
+  summarise(
+    mk = list(MannKendall(total_capacity_MW)), .groups = "drop"
+  ) %>%
+  mutate(
+    Kendall_tau = map_dbl(mk, "tau"),
+    p_value    = map_dbl(mk, "sl")
+  ) %>%
+  select(Technology = FuelUnified, Kendall_tau, p_value) %>%
+  mutate(
+    Kendall_tau = round(Kendall_tau, 3),
+    p_value     = round(p_value, 4),
+    signif = case_when(
+      p_value < 0.001 ~ "***",
+      p_value < 0.01  ~ "**",
+      p_value < 0.05  ~ "*",
+      TRUE            ~ ""
+    )
+  )
+
+mk_results %>%
+  kable(
+    format = "html",
+    caption = "Mann–Kendall Trend Test for Installed Nameplate Capacity (2018–2023)"
+  ) %>%
+  kable_styling(full_width = TRUE)
+
+```
+
+The Mann–Kendall results presented in Table 2 reveal clear differences in long-term capacity trends across renewable technologies of Hydro, Solar, and Wind. Solar and wind both exhibit strong positive monotonic trends, with Kendall’s τ equal to 1.00 and statistically significant p-values (p = 0.0085), indicating there is a consistent increasing trend in installed capacity. In contrast, hydroelectric capacity shows a modest negative τ value (τ = –0.467), but its p-value (p = 0.2597) is not statistically significant, suggesting that there is not any statistically meaningful long-term trend. All together, solar and wind experienced clear and significant upward growth during this period, while hydroelectric capacity remained essentially stable due to geographic and infrastructural constraints.
+
+##Subsection 3: Which states contribute most to renewable capacity growth?
+### 1. Spatial presentation
 
 ```{r, TX, echo=FALSE, message=FALSE, fig.cap="Figure 27. Spatial Distribution of Texas Power Plants by Primary Fuel Type, 2023. Power plants are shown as colorful points. Data source: EPA eGRID (2023).", fig.align="center", fig.width=12, fig.height=6.5, out.width="100%"}
 library(dplyr)
@@ -930,6 +1119,308 @@ ggplot() +
   my_theme
 
 ```
+
+### 2. 
+```{r, echo=FALSE, message=FALSE, tab.cap="Table 3. Top Five States in Solar Capacity Additions (2018–2023)", tab.align="center", tab.width=12, tab.height=6.5, out.width="100%"}
+# 1. Filter to the three technologies and valid rows
+techs <- c("WIND", "SOLAR", "HYDRO")
+
+# 2. Aggregate capacity by year, technology, and state
+by_state_year <- all_ts %>%
+  filter(!is.na(Data_Year_num),FuelUnified %in% techs) %>%
+  group_by(Data_Year_num, FuelUnified, `Plant state abbreviation`) %>%
+  summarise(
+    total_capacity_MW = sum(as.numeric(cap_mw), na.rm = TRUE),
+    n_plants = n_distinct(`Plant name`),
+    .groups = "drop"
+  )
+
+# 3. For each year & technology, pick top 5 states by capacity
+top5_states_by_year <- by_state_year %>%
+  group_by(Data_Year_num, FuelUnified) %>%
+  slice_max(order_by = total_capacity_MW, n = 5, with_ties = FALSE) %>%
+  arrange(Data_Year_num, FuelUnified, desc(total_capacity_MW)) %>%
+  ungroup()
+
+# years and top-N
+years <- 2018:2023
+top_n <- 5
+
+# helper: build wide rank table for a single fuel
+build_top5_table <- function(df, fuel, years = 2018:2023, top_n = 5) {
+  # df is by_state_year (Data_Year_num, FuelUnified, `Plant state abbreviation`, total_capacity_MW)
+  # returns tibble with rank + columns for each year
+  rows_for_years <- map(years, function(yr) {
+    df %>%
+      filter(FuelUnified == fuel, Data_Year_num == yr) %>%
+      arrange(desc(total_capacity_MW)) %>%
+      slice_head(n = top_n) %>%
+      pull(`Plant state abbreviation`) %>%
+      # pad to length top_n
+      { if(length(.) < top_n) c(., rep(NA_character_, top_n - length(.))) else . }
+  })
+  # combine into data.frame: rows = ranks (1..top_n), cols = years
+  mat <- do.call(cbind, rows_for_years)
+  df_out <- as.data.frame(mat, stringsAsFactors = FALSE)
+  colnames(df_out) <- as.character(years)
+  df_out <- tibble::rownames_to_column(df_out, var = "rank")
+  df_out$rank <- seq_len(top_n)
+  df_out <- df_out %>% select(rank, everything())
+  return(df_out)
+}
+
+# Build the three tables
+wind_table  <- build_top5_table(by_state_year, "WIND",  years, top_n)
+solar_table <- build_top5_table(by_state_year, "SOLAR", years, top_n)
+hydro_table  <- build_top5_table(by_state_year, "HYDRO",  years, top_n)
+
+pretty_table <- function(df, title) {
+  df %>%
+    kbl(
+      caption = title,
+      align = "c"
+    ) %>%
+    kable_styling(
+      bootstrap_options = c("striped", "hover", "condensed"),
+      full_width = FALSE,
+      font_size = 14
+    ) %>%
+    row_spec(0, bold = TRUE)  # bold header
+}
+
+pretty_table(solar_table, 
+             "Top Five States in Solar Capacity Additions (2018–2023)")
+```
+
+```{r, echo=FALSE, message=FALSE, tab.cap="Table 4. Top Five States in Hydro Capacity Additions (2018–2023)", tab.align="center", tab.width=12, tab.height=6.5, out.width="100%"}
+pretty_table(hydro_table, 
+             "Top Five States in Hydroelectric Capacity Additions (2018–2023)")
+```
+
+```{r, echo=FALSE, message=FALSE, tab.cap="Table 5. Top Five States in Wind Capacity Additions (2018–2023)", tab.align="center", tab.width=12, tab.height=6.5, out.width="100%"}
+pretty_table(wind_table, 
+             "Top Five States in Wind Capacity Additions (2018–2023)")
+```
+
+
+Tables 3–5 summarize the top five states contributing to wind, solar, and hydroelectric capacity additions from 2018 to 2023. Across all three technologies, clear and stable geographic patterns occur.
+For solar capacity, California consistently ranks first every year, reflecting the state’s long-standing policy incentives and strong solar resource potential (Table 3). North Carolina and Arizona follow closely, though their ranking shifts slightly over time. To be noticed, Texas rises into the top three by 2020, indicating that the state is also having a rapid solar deployment in recent years.
+Hydroelectric capacity, on the other hand, remains almost entirely dominated by Pacific Northwest and East Coast states (Table 4). Washington is the top hydro state across all six years, with California, Oregon, and New York consistently filling the next three positions. The stability of these rankings proves that hydropower is strongly dependent on established infrastructures and geographic constraints, with relatively few new installations occurring within the study period.
+Wind capacity growth is concentrated in the central United States. As shown in Table 5, Texas leads wind capacity additions by a wide margin every year, maintaining its position as the largest wind-producing state in the U.S. Iowa and Oklahoma remain strong contributors, holding the second and third positions throughout the period. Kansas and California round out the top five, with Illinois entering the ranking from 2020 onward. These trends support the hypothesis that wind energy development is anchored in states with large available land areas, consistent wind resources, and established transmission networks.
+
+### 3a. Wind
+```{r, echo=FALSE, message=FALSE}
+three_panel_trend_plot <- function(tech_name,
+                                   df = annual_totals,
+                                   span = 0.6,
+                                   save = FALSE,
+                                   filename = NULL,
+                                   width = 9, height = 10, dpi = 300) {
+
+  # ---- prepare data ----
+  dat <- df %>%
+    filter(FuelUnified == tech_name) %>%
+    arrange(Data_Year_num) %>%
+    mutate(Year = as.integer(as.character(Data_Year_num)))
+  if (nrow(dat) < 3) stop("Need at least 3 years of data for: ", tech_name)
+
+  # ---- fit LOESS & residuals ----
+  lo <- loess(total_capacity_MW ~ Year, data = dat, span = span)
+  dat <- dat %>%
+    mutate(
+      trend_loess = predict(lo, newdata = Year),
+      residual = total_capacity_MW - trend_loess
+    )
+
+  # ---- linear model & Mann-Kendall ----
+  lm_fit <- lm(total_capacity_MW ~ Year, data = dat)
+  lm_sum <- broom::tidy(lm_fit)
+  slope_est <- lm_sum$estimate[lm_sum$term == "Year"]
+  slope_p   <- lm_sum$p.value[lm_sum$term == "Year"]
+
+  mk <- Kendall::MannKendall(dat$total_capacity_MW)
+  tau_val <- as.numeric(mk$tau); mk_p <- as.numeric(mk$sl)
+
+  # ---- Panel 1: Raw data ----
+  p1 <- ggplot(dat, aes(x = Year)) +
+    geom_col(aes(y = total_capacity_MW), fill = "grey92", width = 0.6) +
+    geom_point(aes(y = total_capacity_MW), size = 3, color = "#2b8cbe") +
+    geom_line(aes(y = total_capacity_MW), color = "#2b8cbe", size = 0.6, alpha = 0.7) +
+    labs(title = paste(toupper(tech_name), "- Raw Total Capacity"),
+         y = "Total Capacity (MW)", x = NULL) +
+    theme_minimal(base_size = 13) +
+    theme(plot.title = element_text(size = 16, hjust = 0.5))
+
+  # ---- Panel 2: Trend (LOESS) ----
+  p2 <- ggplot(dat, aes(x = Year)) +
+    geom_line(aes(y = trend_loess), color = "#225ea8", size = 1.4) +
+    geom_point(aes(y = trend_loess), color = "#225ea8", size = 2) +
+    geom_smooth(aes(y = total_capacity_MW), method = "lm", se = FALSE,
+                color = "black", linetype = "dashed", linewidth = 0.8) +
+    labs(title = "Estimated Trend (LOESS) + Linear Fit",
+         y = "Capacity (MW)", x = NULL) +
+    theme_minimal(base_size = 13) +
+    theme(plot.title = element_text(size = 16, hjust = 0.5))
+
+  # ---- Panel 3: Residuals ----
+  p3 <- ggplot(dat, aes(x = Year, y = residual)) +
+    geom_hline(yintercept = 0, linetype = "dashed", color = "grey50") +
+    geom_col(fill = "#fdae61", width = 0.6) +
+    labs(title = "Remainder (Observed - Trend)",
+         y = "Residual (MW)", x = "Year") +
+    theme_minimal(base_size = 13) +
+    theme(plot.title = element_text(size = 16, hjust = 0.5))
+
+  # ---- combine and caption ----
+  combined <- plot_grid(p1, p2, p3, ncol = 1, rel_heights = c(1, 1, 0.8))
+
+  caption_text <- sprintf(
+    "LM slope = %.1f MW/yr (p = %.3g) • Mann–Kendall tau = %.3f (p = %.3g)",
+    slope_est, slope_p, tau_val, mk_p
+  )
+
+  final <- ggdraw() +
+    draw_plot(combined, 0, 0.04, 1, 0.96) +
+    draw_label(caption_text, x = 0.5, y = 0.02, size = 10, hjust = 0.5)
+
+  if (save) {
+    if (is.null(filename)) filename <- paste0(tolower(tech_name), "_three_panel.png")
+    ggsave(filename, plot = final, width = width, height = height, dpi = dpi)
+    message("Saved: ", filename)
+  }
+
+  return(final)
+}
+```
+
+```{r, echo=FALSE, message=FALSE, fig.cap="Graph 3. Three-Panel Trend Analysis of U.S. Wind Capacity (2018–2023). The panels show raw annual capacity values, LOESS-estimated trends with linear fits, and residual structure. Trend statistics (LM slope and Mann–Kendall τ) are displayed in the footer."}
+three_panel_trend_plot("WIND")
+```
+The wind capacity data show a statistically significant increase from 2018 to 2023, with no declines across the period. Both the LOESS trend line and the linear fit indicate a clear upward trajectory, and the statistical tests confirm this pattern. The linear model estimates an average increase of about 10.8 GW per year (p = 0.000171), and the Mann–Kendall test also detects a significant monotonic trend (τ = 1.00, p = 0.0085). The residuals are minimal, indicating that the trend model fits well. 
+
+### 3b. Solar
+```{r}
+three_panel_trend_plot("SOLAR")
+```
+Solar capacity shows a steady and substantial increase from 2018 to 2023. Both the LOESS trend and the linear fit indicate a strong upward trajectory, and the statistical tests confirm this pattern. The linear model estimates an average increase of about 12.7 GW per year (p = 0.000362), and the Mann–Kendall test identifies a significant monotonic upward trend (τ = 1.00, p = 0.0085). The residuals are minimal, suggesting the trend model fits well. Overall, solar capacity grew rapidly and consistently during this period.
+
+### 3c. Hydro
+```{r}
+three_panel_trend_plot("HYDRO")
+```
+Hydro capacity remains mostly stable from 2018 to 2023, with slight year-to-year fluctuations but no clear upward trend. The linear model suggests a small annual decline of about 435 MW per year (p = 0.041), but the Mann–Kendall test does not detect a significant monotonic trend (τ = −0.467, p = 0.26). The discrepancy reflects minor variability rather than a strong directional shift. Overall, hydro capacity appears essentially flat over the study period, with no meaningful long-term increase or decrease.
+
+### 4. Do early adopters have faster renewable expansion?
+```{r, , echo=FALSE, message=FALSE}
+state_year_tech <- by_state_year %>%
+  rename(State = `Plant state abbreviation`)
+
+state_year_tech_clean <- state_year_tech %>%
+  group_by(State, Data_Year_num, FuelUnified) %>%
+  summarise(
+    total_capacity_MW = sum(total_capacity_MW, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+state_year_wide <- state_year_tech_clean %>%
+  pivot_wider(
+    names_from = FuelUnified,
+    values_from = total_capacity_MW,
+    values_fill = 0,
+    names_glue = "{FuelUnified}_MW"
+  )
+
+start_year <- 2018
+end_year <- 2023
+
+wide_2018_2023 <- state_year_wide %>%
+  filter(Data_Year_num %in% c(start_year, end_year)) %>%
+  pivot_wider(
+    id_cols = State,
+    names_from = Data_Year_num,
+    values_from = ends_with("_MW"),
+    names_glue = "{.value}_{Data_Year_num}"
+  )
+# compute growth
+growth_df <- wide_2018_2023 %>%
+  mutate(
+    SOLAR_abs_growth = SOLAR_MW_2023 - SOLAR_MW_2018,
+    WIND_abs_growth  = WIND_MW_2023  - WIND_MW_2018,
+    HYDRO_abs_growth = HYDRO_MW_2023 - HYDRO_MW_2018
+  )
+
+# regression
+lm(SOLAR_abs_growth ~ SOLAR_MW_2018, data = growth_df) %>% summary()
+lm(WIND_abs_growth  ~ WIND_MW_2018,  data = growth_df) %>% summary()
+lm(HYDRO_abs_growth ~ HYDRO_MW_2018, data = growth_df) %>% summary()
+```
+
+```{r, echo=FALSE, message=FALSE}
+# Run regressions for each tech
+lm_solar <- lm(SOLAR_abs_growth ~ SOLAR_MW_2018, data = growth_df)
+lm_wind  <- lm(WIND_abs_growth  ~ WIND_MW_2018,  data = growth_df)
+lm_hydro <- lm(HYDRO_abs_growth ~ HYDRO_MW_2018, data = growth_df)
+#tidy 
+tidy_solar <- tidy(lm_solar)
+tidy_wind  <- tidy(lm_wind)
+tidy_hydro <- tidy(lm_hydro)
+
+#extract slope row
+extract_slope <- function(model, tech_name) {
+  tidy(model, conf.int = TRUE) %>%
+    filter(term != "(Intercept)") %>%
+    transmute(
+      Technology = tech_name,
+      Slope = estimate,
+      `Std. Error` = std.error,
+      `t value` = statistic,
+      `p value` = p.value,
+      `95% CI lower` = conf.low,
+      `95% CI upper` = conf.high,
+      R_squared = summary(model)$r.squared
+    )
+}
+
+# build the summary table
+summary_table <- bind_rows(
+  extract_slope(lm_solar, "Solar"),
+  extract_slope(lm_wind,  "Wind"),
+  extract_slope(lm_hydro, "Hydro")
+) %>%
+  mutate(
+    signif = case_when(
+      `p value` < 0.001 ~ "***",
+      `p value` < 0.01  ~ "**",
+      `p value` < 0.05  ~ "*",
+      TRUE              ~ ""
+    ),
+    Slope = round(Slope, 2),
+    `Std. Error` = round(`Std. Error`, 2),
+    `t value` = round(`t value`, 2),
+    `p value` = formatC(`p value`, format = "f", digits = 4),
+    `95% CI lower` = round(`95% CI lower`, 2),
+    `95% CI upper` = round(`95% CI upper`, 2),
+    R_squared = round(R_squared, 3)
+  ) %>%
+  relocate(signif, .after = `p value`)
+
+# render nice table
+summary_table %>%
+  kable(
+    format = "html",
+    caption = "Table X. Summary of state-level regressions: absolute capacity growth (2018–2023) regressed on baseline (2018) capacity.",
+    align = "c"
+  ) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE) %>%
+  column_spec(1, bold = TRUE) %>%
+  row_spec(0, bold = TRUE) %>%
+  footnote(general = "Signif.: * p < 0.05, ** p < 0.01, *** p < 0.001", footnote_as_chunk = TRUE)
+
+
+```
+In this analysis, early adoption is defined as the baseline renewable capacity a state possessed in 2018, the first year of our study period. States with higher 2018 capacity in a given technology are considered early adopters of that technology. Then, a regression analysis was conducted using this definition to test whether baseline capacity predicts capacity growth from 2018 to 2023.
+The regression results indicate that early adoption plays a meaningful role in predicting renewable energy growth for solar and wind technologies. States with higher baseline solar capacity in 2018 tended to add substantially more capacity by 2023, as shown by the strong positive slope (0.99) and a highly significant p-value. Wind shows a similar pattern, with a positive slope (0.59) and strong statistical significance, suggesting that states with larger initial wind investments continued to expand more rapidly. In contrast, hydro displays a small negative slope (–0.03), which, although statistically significant, likely reflects the limited opportunities for large-scale hydro expansion due to geographic and environmental constraints. Overall, the analysis suggests that solar and wind development exhibit momentum effects—states that started ahead tended to grow faster—while hydro capacity remained relatively stable or slightly declined over time.
+The regression results show strong evidence of momentum effects for both solar and wind. States with higher initial solar capacity added significantly more capacity over the study period, as indicated by a near one-to-one positive slope (0.99, p < 0.001). Wind capacity displays a similar but slightly weaker pattern, with a positive slope (0.59, p < 0.001), suggesting that states with larger early wind investments continued to scale up more rapidly. In contrast, hydro exhibits a small negative slope (–0.03), likely reflecting the physical and geographic limits on expanding hydropower systems rather than meaningful declines in development activity.
 
 \newpage
 
